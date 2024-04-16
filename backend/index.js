@@ -1,21 +1,27 @@
 const express = require("express");
 
-const startPage = require("./src/routes/mainPage");
+const mainPage = require("./src/routes/mainPage");
+const localAuth = require("./src/routes/auth/localAuth");
+const userRoute = require("./src/routes/user");
+const connectDB = require("./src/databases/database");
 
 const app = express();
 
 const PORT = 8000;
+const basicUrl = "/api/v1";
 
-require("./src/databases/database");
-require("./src/databases/schemas/User");
-require("./src/databases/schemas/Story");
+connectDB();
 
 app.use((req, res, next) => {
   console.log(`${req.method}: ${req.url}`);
   next();
 });
 
-app.use("/api/v1", startPage);
+app.use(express.json());
+
+app.use(`${basicUrl}`, mainPage);
+app.use(`${basicUrl}/auth/local`, localAuth);
+app.use(`${basicUrl}/user`, userRoute);
 
 app.listen(PORT, () => {
   console.log(`The server is running on http://localhost:${PORT}/`);
