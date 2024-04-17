@@ -1,8 +1,12 @@
 from bs4 import BeautifulSoup
 import requests
 from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
 
-client = MongoClient("mongodb+srv://1olelllka:KYQ8D5HmNZlHFalL@expressnews.qvfs38w.mongodb.net/ExpressNews?retryWrites=true&w=majority")
+load_dotenv()
+
+client = MongoClient(os.environ['DATABASE_URL'])
 
 urls = []
 def links(url):
@@ -47,6 +51,8 @@ def stories_scraping(url):
 for i in urls:
     stories_scraping(i)
 
+
+# Use only if categories and subcategories don't exist in the database
 
 def sub_category_scraping(url, name):
     page = requests.get(url=url)

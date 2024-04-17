@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const User = require("../databases/schemas/User");
+const User = require("../databases/schemas/localUser");
 
 const register = async (req, res, next) => {
   const { username, email, password, full_name } = req.body;
@@ -31,7 +31,7 @@ const login = async (req, res, next) => {
     if (!passwordMatched) {
       return res.status(401).json({ message: "Invalid password" });
     }
-    const token = jwt.sign({ userId: user._id }, "somesecret", {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     res.json(token);
