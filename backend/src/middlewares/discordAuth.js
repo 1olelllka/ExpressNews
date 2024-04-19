@@ -30,7 +30,6 @@ passport.use(
       scope: ["identify", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
       const username = profile.username;
       const email = profile.email;
       try {
@@ -40,7 +39,7 @@ passport.use(
             expiresIn: "1h",
           });
           console.log(token);
-          return done(null, user, token);
+          return done(null, user, { token: token, userId: user._id });
         } else {
           const newUser = new DiscordUser({
             username,
@@ -57,7 +56,7 @@ passport.use(
               expiresIn: "1h",
             }
           );
-          return done(null, newUser, token);
+          return done(null, newUser, { token: token, userId: newUser._id });
         }
       } catch (err) {
         return done(err);

@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 require("dotenv").config();
 
 const mainPage = require("./src/routes/mainPage");
@@ -14,8 +15,6 @@ const PORT = 8000;
 const basicUrl = "/api/v1";
 
 connectDB();
-require("./src/middlewares/discordAuth");
-require("./src/middlewares/googleAuth");
 
 app.use((req, res, next) => {
   console.log(`${req.method}: ${req.url}`);
@@ -28,8 +27,16 @@ app.use(
     secret: process.env.SESSIONS_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 20 }, // 20 minutes
+    store: MongoStore.create({
+      mongoUrl: process.env.DATABASE_URL,
+      stringify: false,
+      autoRemove: "native",
+    }),
   })
 );
+require("./src/middlewares/discordAuth");
+require("./src/middlewares/googleAuth");
 
 app.use(`${basicUrl}`, mainPage);
 app.use(`${basicUrl}/auth`, auth);

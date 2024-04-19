@@ -1,5 +1,4 @@
 const { Router } = require("express");
-const User = require("../databases/schemas/localUser");
 const { authenticate } = require("../middlewares/authentication");
 
 const routes = Router();

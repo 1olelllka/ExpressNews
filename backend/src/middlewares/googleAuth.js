@@ -31,7 +31,6 @@ passport.use(
       scope: ["profile", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
       const googleId = profile._json.sub;
       try {
         const user = await GoogleUser.findOne({ googleId: googleId });
@@ -39,7 +38,7 @@ passport.use(
           const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
-          return done(null, user, token);
+          return done(null, user, { token: token, userId: user._id });
         } else {
           const newUser = new GoogleUser({
             googleId: googleId,
@@ -57,7 +56,7 @@ passport.use(
               expiresIn: "1h",
             }
           );
-          return done(null, newUser, token);
+          return done(null, newUser, { token: token, userId: newUser._id });
         }
       } catch (err) {
         console.log(err);

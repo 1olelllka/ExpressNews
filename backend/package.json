@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "bcryptjs": "^2.4.3",
+    "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.5",
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
