@@ -38,7 +38,6 @@ passport.use(
           const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
-          console.log(token);
           return done(null, user, { token: token, userId: user._id });
         } else {
           const newUser = new DiscordUser({

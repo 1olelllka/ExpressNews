@@ -4,7 +4,9 @@ const User = require("../databases/schemas/localUser");
 
 const register = async (req, res, next) => {
   const { username, email, password, full_name } = req.body;
-
+  if (!username || !email || !password || !full_name) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
@@ -34,7 +36,9 @@ const login = async (req, res, next) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.json(token);
+    req.session.userId = user._id;
+    req.session.token = token;
+    res.json({ status: "success" });
   } catch (err) {
     next(err);
   }
