@@ -20,8 +20,12 @@ const Model = new Schema({
     required: true,
   },
   image: {
-    type: Buffer,
+    type: String,
     required: false,
+  },
+  source: {
+    type: String,
+    required: true,
   },
   category: {
     type: String,

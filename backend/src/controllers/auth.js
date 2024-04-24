@@ -16,7 +16,7 @@ const register = async (req, res, next) => {
       full_name,
     });
     await user.save();
-    res.json({ message: "User created successfully" });
+    res.sendStatus(201);
   } catch (err) {
     next(err);
   }
@@ -38,7 +38,7 @@ const login = async (req, res, next) => {
     });
     req.session.userId = user._id;
     req.session.token = token;
-    res.json({ status: "success" });
+    res.sendStatus(201);
   } catch (err) {
     next(err);
   }

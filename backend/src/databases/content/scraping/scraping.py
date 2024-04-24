@@ -17,7 +17,11 @@ class Scraping:
         pages = soup.find_all('a', attrs={'class':'container__link--type-article'})
 
         for i in pages:
-            self.story_scraping('https://edition.cnn.com' + i.attrs['href'])
+            print('Processing: ' + 'https://edition.cnn.com' + i.attrs['href'])
+            try:
+                self.story_scraping('https://edition.cnn.com' + i.attrs['href'])
+            except:
+                print("Error processing: " + 'https://edition.cnn.com' + i.attrs['href'])
 
     def story_scraping(self, url):
         page = requests.get(url=url)
@@ -41,6 +45,7 @@ class Scraping:
         "date": ' '.join(str(date).split()),
         "image": str(image.attrs['src']) if image else '',
         "content": str(content),
+        "source": str(self.src_url)[8:-1],
         'category':str(category.text.strip()) if category else '',
         'subcategory':str(subcategory.text.strip()) if subcategory else ''
         }

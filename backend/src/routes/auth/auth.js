@@ -23,7 +23,7 @@ routes.get(
     if (req.authInfo.token && req.authInfo.userId) {
       req.session.token = req.authInfo.token;
       req.session.userId = req.authInfo.userId;
-      res.json({ token: req.authInfo });
+      res.sendStatus(201);
     } else {
       res.sendStatus(401);
     }
@@ -45,7 +45,7 @@ routes.get(
     if (req.authInfo.token && req.authInfo.userId) {
       req.session.token = req.authInfo.token;
       req.session.userId = req.authInfo.userId;
-      res.json({ token: req.authInfo });
+      res.sendStatus(201);
     } else {
       res.sendStatus(401);
     }
