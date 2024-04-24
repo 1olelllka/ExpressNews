@@ -27,18 +27,15 @@ const GoogleUserModel = new Schema({
     required: false,
   },
   saved_stories: {
-    type: Array,
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Story",
+      },
+    ],
     required: false,
   },
   saved_searches: {
-    type: Array,
-    required: false,
-  },
-  liked: {
-    type: Array,
-    required: false,
-  },
-  disliked: {
     type: Array,
     required: false,
   },
