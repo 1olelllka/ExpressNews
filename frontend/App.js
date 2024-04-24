@@ -1,7 +1,7 @@
-import Home from './components/home';
+import MyTabs from './components/tabs';
 
 export default function App() {
   return (
-    <Home />
+    <MyTabs />
   );
 }
