@@ -6,6 +6,7 @@ require("dotenv").config();
 const mainPage = require("./src/routes/mainPage");
 const auth = require("./src/routes/auth/auth");
 const userRoute = require("./src/routes/user");
+const feedbackRoute = require("./src/routes/feedback");
 
 const connectDB = require("./src/databases/database");
 
@@ -41,6 +42,7 @@ require("./src/middlewares/googleAuth");
 app.use(`${basicUrl}`, mainPage);
 app.use(`${basicUrl}/auth`, auth);
 app.use(`${basicUrl}/user`, userRoute);
+app.use(`${basicUrl}/feedback`, feedbackRoute);
 
 app.listen(PORT, () => {
   console.log(`The server is running on http://localhost:${PORT}/`);

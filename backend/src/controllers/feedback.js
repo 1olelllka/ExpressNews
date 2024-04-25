@@ -1,0 +1,31 @@
+const Feedback = require("../databases/schemas/feedback");
+const { send } = require("../../nodemailer");
+
+const feedback = async (req, res) => {
+  const { description, notify } = req.body;
+
+  if (!description) {
+    return res.status(400).json({ message: "Description is required" });
+  }
+  try {
+    const feedback = new Feedback({
+      description: description,
+      email: req.user.email,
+      notify: notify,
+    });
+    if (notify) {
+      send({
+        from: "ExpressNews Team <0I0z5@example.com>",
+        to: req.user.email,
+        subject: "Feedback",
+        text: "Thank you for your feedback, you have enabled email notifications concerning the status of an issue. We will try to fix it as soon as possible.\nAs soon as we fix it, you will receive a notification on your email.\n\n\n\nBest regards,\nExpressNews Team",
+      });
+    }
+    await feedback.save();
+    res.sendStatus(201);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { feedback };

@@ -13,23 +13,22 @@ async function addToSavedArticles(req, res, next) {
     return res.status(404).json({ message: "Story not found" });
   }
   const isAlreadySaved =
-    (await User.findById(userId).where("saved_articles").in([storyId])) ||
-    (await discordUser
-      .findById(userId)
-      .where("saved_articles")
-      .in([storyId])) ||
-    (await googleUser.findById(userId).where("saved_articles").in([storyId]));
-  if (isAlreadySaved) {
+    (await User.findById(userId)) ||
+    (await discordUser.findById(userId)) ||
+    (await googleUser.findById(userId));
+  console.log(isAlreadySaved);
+
+  if (isAlreadySaved.saved_stories.includes(storyId)) {
     return res.status(400).json({ message: "Already saved" });
   }
   (await User.findByIdAndUpdate(userId, {
-    $push: { saved_articles: storyId },
+    $push: { saved_stories: storyId },
   })) ||
     (await discordUser.findByIdAndUpdate(userId, {
-      $push: { saved_articles: storyId },
+      $push: { saved_stories: storyId },
     })) ||
     (await googleUser.findByIdAndUpdate(userId, {
-      $push: { saved_articles: storyId },
+      $push: { saved_stories: storyId },
     }));
   res.sendStatus(200);
   next();

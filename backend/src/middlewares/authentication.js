@@ -18,9 +18,11 @@ const authenticate = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    if (decoded.userId != req.session.userId) {
-      return res.status(401).json({ message: "Error, try again later" });
-    }
+
+    // TEMPORARILY DISABLED FOR DEBUGING PURPOSES
+    // if (decoded.userId != req.session.userId) {
+    //   return res.status(401).json({ message: "Error, try again later" });
+    // }
 
     req.user = user;
     next();
