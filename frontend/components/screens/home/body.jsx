@@ -44,6 +44,9 @@ export default function Body() {
             <Carousel
                 ref={_carousel}
                 data={data}
+                loop
+                autoplay = {true}
+                autoplayInterval={5000}
                 sliderWidth={wp(93)}
                 itemWidth={wp(93)}
                 onSnapToItem={(index) => setActiveDotIndex(index)}
@@ -63,15 +66,17 @@ export default function Body() {
                 activeDotIndex={activeDotIndex}
                 dotsLength={data.length}
                 dotStyle = {{
-                  width: 13,
-                  backgroundColor: '#EE6D33'
-                }}
-                inactiveDotStyle = {{
                   width: 10,
                   height: 10,
                   borderRadius: 5,
+                  marginHorizontal: 0,                  
+                  backgroundColor: '#EE6D33'
+                }}
+                inactiveDotStyle = {{              
                   backgroundColor: 'gray'
                 }}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
               />
             </View>
           </View>
