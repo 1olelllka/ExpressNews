@@ -23,11 +23,13 @@ const data = [
       image: require('../../../assets/favicon.png'), link: 'asgadxzvz.com', date: '3h ago'},
 ]
 
-const _carousel = useRef();
 
-const [activeDotIndex, setActiveDotIndex] = useState(0);
 
 export default function Body() {
+  const [activeDotIndex, setActiveDotIndex] = useState(0);
+
+  const _carousel = useRef();
+
   return (
     <View className = "ml-4 mt-5 mr-4">
         <View>
@@ -44,7 +46,7 @@ export default function Body() {
                 data={data}
                 sliderWidth={wp(93)}
                 itemWidth={wp(93)}
-
+                onSnapToItem={(index) => setActiveDotIndex(index)}
                 renderItem={({ item, index }) => {
                   return(
                     <View className = "">
@@ -52,17 +54,27 @@ export default function Body() {
                       <Text className = "text-neutral-500 font-medium mt-4">{item.link}</Text>
                       <Text className = "mt-3 font-medium" style = {{fontSize: hp(2)}}>{item.title}</Text>
                       <Text className = "text-neutral-500 font-medium mt-3">{item.date}</Text>
-                      <View>
-                        <Pagination 
-                          carouselRef={_carousel}
-                          activeDotIndex={activeDotIndex}
-                          dotsLength={data.length}
-                        />
-                      </View>
                     </View>
                   )}}
             />
+            <View>
+              <Pagination 
+                carouselRef={_carousel}
+                activeDotIndex={activeDotIndex}
+                dotsLength={data.length}
+                dotStyle = {{
+                  width: 13,
+                  backgroundColor: '#EE6D33'
+                }}
+                inactiveDotStyle = {{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 5,
+                  backgroundColor: 'gray'
+                }}
+              />
             </View>
+          </View>
         </View>
     </View>
   )
