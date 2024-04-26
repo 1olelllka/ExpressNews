@@ -32,8 +32,8 @@ class Scraping:
         date = soup.find('div', attrs={'class':'timestamp'}).text.strip()
         image = soup.find('img', attrs={'class':'image__dam-img'})
         article_content = soup.find_all('p', attrs={'class':'paragraph inline-placeholder'})
-        category = soup.find('a', attrs={'class':'breadcrumb__parent-link'})
-        subcategory = soup.find('a', attrs={'class':'breadcrumb__child-link'})
+        category_link = soup.find('a', attrs={'class':'brand-logo__theme-link'})
+        category = category_link.attrs['href'].split('/')[-1]
 
         content = ''
         for j in article_content:
@@ -46,8 +46,7 @@ class Scraping:
         "image": str(image.attrs['src']) if image else '',
         "content": str(content),
         "source": str(self.src_url)[8:-1],
-        'category':str(category.text.strip()) if category else '',
-        'subcategory':str(subcategory.text.strip()) if subcategory else ''
+        'category':str(category) if category else '',
         }
         db = self.client.get_database("ExpressNews")
         if db.stories.find_one({'header': post['header']}):
@@ -58,31 +57,11 @@ class Scraping:
         page = requests.get(url=self.src_url)
         soup = BeautifulSoup(page.text, 'html.parser')
 
-        def sub_category_scraping(url, name):
-                page = requests.get(url=url)
-                soup = BeautifulSoup(page.text, 'html.parser')
-
-                to_db = {
-                    'name': name,
-                    'subcategories':[]
-                }
-                link = soup.find_all('a', attrs={'class':'header__nav-item-link'})
-
-                exists = []
-                for i in link:
-                    if i.text.strip() != 'More' and i.text.strip() not in exists:
-                        exists.append(i.text.strip())
-                        to_db['subcategories'].append({
-                            'name': i.text.strip(),
-                        })
-                
-                db = self.client.get_database("ExpressNews")
-                db.categories.insert_one(to_db)
-
         link = soup.find_all('a', attrs={'class':'header__nav-item-link'})
         for i in link:
             if i.text.strip() != 'More':
-                sub_category_scraping(i.attrs['href'], i.text.strip()) 
+                db = self.client.get_database('ExpressNews')
+                db.categories.insert_one({"name": i.text.strip()})
     
     
 # RUN

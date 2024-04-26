@@ -31,10 +31,6 @@ const Model = new Schema({
     type: String,
     required: true,
   },
-  subcategory: {
-    type: String,
-    required: false,
-  },
 });
 
 const Story = mongoose.model("Story", Model);

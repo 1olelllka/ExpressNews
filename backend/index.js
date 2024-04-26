@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require("express-session");
+const RedisStore = require("connect-redis").default;
 const MongoStore = require("connect-mongo");
 require("dotenv").config();
 
@@ -9,6 +10,7 @@ const userRoute = require("./src/routes/user");
 const feedbackRoute = require("./src/routes/feedback");
 
 const connectDB = require("./src/databases/database");
+const client = require("./src/databases/redis");
 
 const app = express();
 
@@ -16,6 +18,8 @@ const PORT = 8000;
 const basicUrl = "/api/v1";
 
 connectDB();
+// connect to redis
+client.connect().then(console.log("Connected to Redis")).catch(console.error);
 
 app.use((req, res, next) => {
   console.log(`${req.method}: ${req.url}`);
@@ -29,10 +33,16 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 20 }, // 20 minutes
-    store: MongoStore.create({
-      mongoUrl: process.env.DATABASE_URL,
-      stringify: false,
-      autoRemove: "native",
+    // store: MongoStore.create({
+    //   mongoUrl: process.env.DATABASE_URL,
+    //   stringify: false,
+    //   autoRemove: "native",
+    // }),
+    store: new RedisStore({
+      client: client,
+      secret: process.env.SESSIONS_SECRET,
+      resave: false,
+      saveUninitialized: true,
     }),
   })
 );
