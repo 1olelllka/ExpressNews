@@ -52,6 +52,7 @@ routes.get(
   }
 );
 
+// WHEN DEBUG
 routes.get("/", (req, res) => {
   res.send(req.session);
 });

@@ -1,16 +1,13 @@
 const express = require("express");
 const session = require("express-session");
 const RedisStore = require("connect-redis").default;
-const MongoStore = require("connect-mongo");
 require("dotenv").config();
-
-const mainPage = require("./src/routes/mainPage");
-const auth = require("./src/routes/auth/auth");
-const userRoute = require("./src/routes/user");
-const feedbackRoute = require("./src/routes/feedback");
 
 const connectDB = require("./src/databases/database");
 const client = require("./src/databases/redis");
+
+// Middleware to check if user is logged in
+const { authenticate } = require("./src/middlewares/authentication");
 
 const app = express();
 
@@ -32,12 +29,7 @@ app.use(
     secret: process.env.SESSIONS_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 20 }, // 20 minutes
-    // store: MongoStore.create({
-    //   mongoUrl: process.env.DATABASE_URL,
-    //   stringify: false,
-    //   autoRemove: "native",
-    // }),
+    cookie: { maxAge: 1000 * 60 * 60 }, // 60 minutes
     store: new RedisStore({
       client: client,
       secret: process.env.SESSIONS_SECRET,
@@ -49,10 +41,13 @@ app.use(
 require("./src/middlewares/discordAuth");
 require("./src/middlewares/googleAuth");
 
-app.use(`${basicUrl}`, mainPage);
-app.use(`${basicUrl}/auth`, auth);
-app.use(`${basicUrl}/user`, userRoute);
-app.use(`${basicUrl}/feedback`, feedbackRoute);
+app.use(`${basicUrl}/home`, authenticate, require("./src/routes/mainPage"));
+app.use(`${basicUrl}/auth`, require("./src/routes/auth/auth"));
+app.use(`${basicUrl}/user`, authenticate, require("./src/routes/user"));
+app.use(`${basicUrl}/feedback`, authenticate, require("./src/routes/feedback"));
+
+// TODO: Add sources, but after you finish caching another (easier) things
+// app.use(`${basicUrl}/sources`, require("./src/routes/sources"));
 
 app.listen(PORT, () => {
   console.log(`The server is running on http://localhost:${PORT}/`);

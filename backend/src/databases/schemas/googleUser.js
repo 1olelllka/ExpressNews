@@ -35,10 +35,6 @@ const GoogleUserModel = new Schema({
     ],
     required: false,
   },
-  saved_searches: {
-    type: Array,
-    required: false,
-  },
   subscribed: {
     type: Array,
     required: false,

@@ -1,7 +1,5 @@
 const Stories = require("../databases/schemas/Story");
-const User = require("../databases/schemas/localUser");
-const discordUser = require("../databases/schemas/discordUser");
-const googleUser = require("../databases/schemas/googleUser");
+const client = require("../databases/redis");
 
 const getStories = async (req, res) => {
   try {
@@ -21,19 +19,27 @@ const getStoriesSearch = async (req, res) => {
   try {
     var page = req.query.page;
     const search = req.query.query;
+    var searches = [];
+    const exists = await client.hGet(req.user._id.toString(), "searches");
+
+    if (exists) {
+      searches = JSON.parse(exists);
+    }
+
     if (!page) {
       page = 1;
     }
     const startIndex = (page - 1) * 5;
-    const user =
-      (await User.findById(req.session.userId)) ||
-      (await discordUser.findById(req.session.userId)) ||
-      (await googleUser.findById(req.session.userId));
     const stories = await Stories.find({ $text: { $search: search } })
       .limit(5)
       .skip(startIndex);
-    user.saved_searches.push(search);
-    await user.save();
+
+    searches.push(search);
+    await client.hSet(
+      req.user._id.toString(),
+      "searches",
+      JSON.stringify(searches)
+    );
     res.send(stories);
   } catch (err) {
     console.log(err);

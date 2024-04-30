@@ -4,6 +4,6 @@ const { feedback } = require("../controllers/feedback");
 
 const routes = Router();
 
-routes.post("/", authenticate, feedback);
+routes.post("/", feedback);
 
 module.exports = routes;

@@ -1,5 +1,4 @@
 const { Router } = require("express");
-const { authenticate } = require("../middlewares/authentication");
 const {
   getStories,
   getStoriesSearch,
@@ -8,8 +7,8 @@ const {
 
 const routes = Router();
 
-routes.get("/", authenticate, getStories);
-routes.get("/search", authenticate, getStoriesSearch);
-routes.get("/category", authenticate, getStoriesCategory);
+routes.get("/", getStories);
+routes.get("/search", getStoriesSearch);
+routes.get("/category", getStoriesCategory);
 
 module.exports = routes;
