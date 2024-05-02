@@ -19,7 +19,7 @@ export default function MyTabs() {
                     return (
                         <View className = "items-center justify-center">
                             <Ionicons name="home" size={hp(3)} color={focused ? "#EE6D33" : "gray"} />
-                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '700'}}>For You</Text>
+                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '600'}}>For You</Text>
                         </View>
                     )
                 }
@@ -29,7 +29,7 @@ export default function MyTabs() {
                     return (
                         <View className = "items-center justify-center">
                             <Ionicons name="compass-outline" size={hp(3)} color={focused ? "#EE6D33" : "gray"} />
-                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '700'}}>Headlines</Text>
+                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '600'}}>Headlines</Text>
                         </View>
                     )
                 }
@@ -39,7 +39,7 @@ export default function MyTabs() {
                     return (
                         <View className = "items-center justify-center">
                             <Ionicons name="bookmark-outline" size={hp(3)} color={focused ? "#EE6D33" : "gray"} />
-                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '700'}}>Following</Text>
+                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '600'}}>Following</Text>
                         </View>
                     )
                 }
@@ -49,7 +49,7 @@ export default function MyTabs() {
                     return (
                         <View className = "items-center justify-center">
                             <Ionicons name="star-outline" size={hp(3)} color={focused ? "#EE6D33" : "gray"} />
-                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '700'}}>Sources</Text>
+                            <Text style = {{color: focused ? "#EE6D33": "gray", fontWeight: '600'}}>Sources</Text>
                         </View>
                     )
                 }

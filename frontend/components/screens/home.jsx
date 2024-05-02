@@ -7,11 +7,9 @@ import Body from './home/body'
 
 export default function Home() {
   return (
-    <SafeAreaProvider>
-        <SafeAreaView>
-            <Header /> 
-            <Body />         
-        </SafeAreaView>   
-    </SafeAreaProvider>
+    <SafeAreaView>
+        <Header /> 
+        <Body />         
+    </SafeAreaView>   
   )
 }

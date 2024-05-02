@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-native/index.js b/node_modules/react-native/index.js
-index 7149c64..79dd672 100644
+index 7149c64..6939b48 100644
 --- a/node_modules/react-native/index.js
 +++ b/node_modules/react-native/index.js
-@@ -380,43 +380,18 @@ module.exports = {
+@@ -380,43 +380,15 @@ module.exports = {
    },
    // Deprecated Prop Types
    get ColorPropType(): $FlowFixMe {
@@ -15,7 +15,6 @@ index 7149c64..79dd672 100644
 -    );
      return require('deprecated-react-native-prop-types').ColorPropType;
    },
-+  
    get EdgeInsetsPropType(): $FlowFixMe {
 -    console.error(
 -      'EdgeInsetsPropType will be removed from React Native, along with all ' +
@@ -26,7 +25,6 @@ index 7149c64..79dd672 100644
 -    );
      return require('deprecated-react-native-prop-types').EdgeInsetsPropType;
    },
-+  
    get PointPropType(): $FlowFixMe {
 -    console.error(
 -      'PointPropType will be removed from React Native, along with all ' +
@@ -37,7 +35,6 @@ index 7149c64..79dd672 100644
 -    );
      return require('deprecated-react-native-prop-types').PointPropType;
    },
-+  
    get ViewPropTypes(): $FlowFixMe {
 -    console.error(
 -      'ViewPropTypes will be removed from React Native, along with all ' +
