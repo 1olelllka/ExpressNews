@@ -45,9 +45,7 @@ app.use(`${basicUrl}/home`, authenticate, require("./src/routes/mainPage"));
 app.use(`${basicUrl}/auth`, require("./src/routes/auth/auth"));
 app.use(`${basicUrl}/user`, authenticate, require("./src/routes/user"));
 app.use(`${basicUrl}/feedback`, authenticate, require("./src/routes/feedback"));
-
-// TODO: Add sources, but after you finish caching another (easier) things
-// app.use(`${basicUrl}/sources`, require("./src/routes/sources"));
+app.use(`${basicUrl}/sources`, authenticate, require("./src/routes/sources"));
 
 app.listen(PORT, () => {
   console.log(`The server is running on http://localhost:${PORT}/`);

@@ -1,12 +1,17 @@
 const { Router } = require("express");
-const { authenticate } = require("../middlewares/authentication");
-const { getSources, follow, getFollowing } = require("../controllers/sources");
+const {
+  getSources,
+  follow,
+  unfollow,
+  getFollowing,
+} = require("../controllers/sources");
 
 const routes = Router();
 
-routes.get("/", authenticate, getSources);
+routes.get("/", getSources);
 
-routes.post("/follow", authenticate, follow);
+routes.get("/my-following", getFollowing);
+routes.post("/follow", follow);
+routes.delete("/unfollow", unfollow);
 
-routes.get("/my-following", authenticate, getFollowing);
 module.exports = routes;
