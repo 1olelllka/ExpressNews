@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 
 const config = {
   service: "gmail",

@@ -4,7 +4,7 @@ const {
   follow,
   unfollow,
   getFollowing,
-} = require("../controllers/sources");
+} = require("../../controllers/sources");
 
 const routes = Router();
 

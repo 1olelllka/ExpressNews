@@ -3,8 +3,8 @@ const {
   showSavedStories,
   saveStory,
   deleteStory,
-} = require("../controllers/savedArticles");
-const client = require("../databases/redis");
+} = require("../../controllers/savedArticles");
+const client = require("../../databases/redis");
 
 const routes = Router();
 
