@@ -4,6 +4,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "postinstall": "patch-package",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
@@ -11,6 +12,7 @@
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.17",
+    "@react-navigation/stack": "^6.3.29",
     "deprecated-react-native-prop-types": "^5.0.0",
     "expo": "~50.0.17",
     "expo-status-bar": "~1.11.1",
@@ -19,6 +21,8 @@
     "postinstall-postinstall": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.73.6",
+    "react-native-gesture-handler": "~2.14.0",
+    "react-native-onboarding-swiper": "^1.2.0",
     "react-native-reanimated": "~3.6.2",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "4.8.2",

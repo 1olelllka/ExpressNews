@@ -1,18 +1,16 @@
 import { View, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Ionicons } from '@expo/vector-icons';
 import Home from './screens/home';
-import Headlines from './screens/headlines';
-import Following from './screens/following';
+import Headlines from './screens/headlines/headlines';
+import Following from './screens/following/following';
 import Sources from './screens/sources';
 
 const Tab = createBottomTabNavigator();
 
 export default function MyTabs() {
   return (
-    <NavigationContainer>
         <Tab.Navigator screenOptions={{headerShown: false, tabBarShowLabel: false, tabBarStyle: {height: hp(11)}}}>
             <Tab.Screen name="Home" component={Home} options={{
                 tabBarIcon: ({focused}) => {
@@ -55,6 +53,5 @@ export default function MyTabs() {
                 }
             }}/>
         </Tab.Navigator>
-    </NavigationContainer>
   );
 }
