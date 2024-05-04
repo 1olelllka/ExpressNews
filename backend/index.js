@@ -1,4 +1,5 @@
 const express = require("express");
+const { server } = require("./src/messages/rabbitmq");
 // Config
 require("dotenv").config();
 const app = express();
@@ -14,7 +15,12 @@ const connectDB = require("./src/databases/database");
 const client = require("./src/databases/redis");
 
 connectDB();
-client.connect().then(console.log("Connected to Redis")).catch(console.error);
+client
+  .connect()
+  .then(
+    console.log("\x1b[41m%s\x1b[0m", "Cache ----> Connected to Redis <----")
+  )
+  .catch(console.error);
 
 // Middlewares
 const { authenticate } = require("./src/middlewares/authentication");
@@ -56,6 +62,6 @@ app.use(
 );
 
 // Server
-app.listen(PORT, () => {
-  console.log(`The server is running on http://localhost:${PORT}/`);
+server.listen(PORT, () => {
+  console.log(`The server is running on http://192.168.209.41:${PORT}/`);
 });

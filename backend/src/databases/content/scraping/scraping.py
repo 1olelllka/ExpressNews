@@ -1,15 +1,18 @@
 from bs4 import BeautifulSoup
 import requests
-from pymongo import MongoClient
+# from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+import pika
+import json
 
 load_dotenv()
 
+connection_parameters = pika.ConnectionParameters('localhost')  # Replace with your hostname/IP if different
 class Scraping:
     def __init__(self, url):
         self.src_url = url
-        self.client = MongoClient(os.environ['DATABASE_URL'])
+        # self.client = MongoClient(os.environ['DATABASE_URL'])
 
     def stories_scraping(self):
         page = requests.get(url=self.src_url)
@@ -17,11 +20,8 @@ class Scraping:
         pages = soup.find_all('a', attrs={'class':'container__link--type-article'})
 
         for i in pages:
-            print('Processing: ' + 'https://edition.cnn.com' + i.attrs['href'])
-            try:
-                self.story_scraping('https://edition.cnn.com' + i.attrs['href'])
-            except:
-                print("Error processing: " + 'https://edition.cnn.com' + i.attrs['href'])
+            print('Processing: ' + self.src_url + i.attrs['href'])
+            self.story_scraping(self.src_url + i.attrs['href'])
 
     def story_scraping(self, url):
         page = requests.get(url=url)
@@ -48,10 +48,15 @@ class Scraping:
         "source": str(self.src_url)[8:-1],
         'category':str(category) if category else '',
         }
-        db = self.client.get_database("ExpressNews")
-        if db.stories.find_one({'header': post['header']}):
-            return
-        db.stories.insert_one(post)
+        
+        connection = pika.BlockingConnection(connection_parameters)
+
+        channel = connection.channel()
+        channel.queue_declare(queue='news_queue', durable=True)
+
+        channel.basic_publish(exchange='', routing_key='news_queue', body=json.dumps(post))
+        print(" [x] Sent %r" % post)
+        connection.close()
 
     def category_scraping(self):
         page = requests.get(url=self.src_url)
@@ -66,7 +71,7 @@ class Scraping:
     
 # RUN
 
-scraping = Scraping('https://edition.cnn.com/')
+scraping = Scraping('https://edition.cnn.com')
 # Categories Scraping
 # scraping.category_scraping()
 

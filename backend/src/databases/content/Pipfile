@@ -8,6 +8,7 @@ beautifulsoup4 = "*"
 requests = "*"
 pymongo = "*"
 python-dotenv = "*"
+pika = "*"
 
 [dev-packages]
 
