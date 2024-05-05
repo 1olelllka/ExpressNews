@@ -1,10 +1,16 @@
 const express = require("express");
-const { server } = require("./src/messages/rabbitmq");
+const { createServer } = require("node:http");
+const { Server } = require("socket.io");
 // Config
 require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT;
 const basicUrl = process.env.BASIC_URL;
+
+// Server and Socket.io
+const server = createServer(app);
+const io = new Server(server);
+module.exports = { server, io }; // for messages
 
 // Sessions Middleware
 const session = require("express-session");
@@ -61,7 +67,10 @@ app.use(
   require("./src/routes/user/sources")
 );
 
+// RabbitMQ + Socket.IO
+require("./src/messages/rabbitmq");
+
 // Server
 server.listen(PORT, () => {
-  console.log(`The server is running on http://192.168.209.41:${PORT}/`);
+  console.log(`The server is running on http://localhost:${PORT}/`);
 });

@@ -39,6 +39,10 @@ const Model = new Schema({
     type: Array,
     required: false,
   },
+  preferred_topics: {
+    type: Array,
+    required: false,
+  },
 });
 
 const User = mongoose.model("User", Model);

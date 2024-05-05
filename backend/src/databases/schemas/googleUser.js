@@ -39,6 +39,10 @@ const GoogleUserModel = new Schema({
     type: Array,
     required: false,
   },
+  preferred_topics: {
+    type: Array,
+    required: false,
+  },
 });
 
 const GoogleUser = mongoose.model("GoogleUser", GoogleUserModel);

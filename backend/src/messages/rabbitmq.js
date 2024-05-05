@@ -1,13 +1,10 @@
-const express = require("express");
 const amqplib = require("amqplib/callback_api");
-const Story = require("../databases/schemas/Story");
-const { createServer } = require("node:http");
-const { Server } = require("socket.io");
+const discordUser = require("../databases/schemas/discordUser");
+const googleUser = require("../databases/schemas/googleUser");
+const User = require("../databases/schemas/localUser");
 
-const app = express();
-
-const server = createServer(app);
-const io = new Server(server);
+const server = require("../../index").server;
+const io = require("../../index").io;
 
 amqplib.connect("amqp://localhost", (err, conn) => {
   if (err) {
@@ -17,26 +14,25 @@ amqplib.connect("amqp://localhost", (err, conn) => {
     "\x1b[41m%s\x1b[0m",
     "Message Broker ----> Connected to RabbitMQ <----"
   );
-  const queue_name = "news_queue";
+  const queue_name = "news_updates";
 
   conn.createChannel((err, ch) => {
     if (err) {
       console.log(err);
     }
     ch.assertQueue(queue_name, { durable: true });
-    ch.consume(queue_name, (msg) => {
+    ch.consume(queue_name, async (msg) => {
       if (msg !== null) {
         const data = JSON.parse(msg.content.toString());
-        const story = new Story(data);
-        story
-          .save()
-          .then(() => {
-            console.log("saved");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        io.emit("news", data);
+        console.log("Received data from scraping server");
+
+        const interestedUsers = await discordUser.find({
+          preferred_topics: { $in: data.category },
+        });
+        console.log(interestedUsers);
+        interestedUsers.forEach((user) => {
+          io.to(user._id.toString()).emit("news_updates", data);
+        });
         ch.ack(msg);
       }
     });
@@ -46,8 +42,9 @@ amqplib.connect("amqp://localhost", (err, conn) => {
 io.on("connection", (socket) => {
   console.log(
     "\x1b[41m%s\x1b[0m",
-    "Socket.IO ----> Client connected via Socket.IO <----"
+    `Socket.IO ----> Client  \x1b[43m<< ${socket.handshake.auth.userId} >>\x1b[0m\x1b[41m connected via Socket.IO <----\x1b[0m`
   );
+  socket.join(socket.handshake.auth.userId);
 });
 
 module.exports = { server, amqplib };

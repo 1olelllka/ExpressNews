@@ -39,6 +39,10 @@ const DiscordUserModel = new Schema({
     type: Array,
     required: false,
   },
+  preferred_topics: {
+    type: Array,
+    required: false,
+  },
 });
 
 const DiscordUser = mongoose.model("DiscordUser", DiscordUserModel);

@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-# from pymongo import MongoClient
+from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 import pika
@@ -12,7 +12,7 @@ connection_parameters = pika.ConnectionParameters('localhost')  # Replace with y
 class Scraping:
     def __init__(self, url):
         self.src_url = url
-        # self.client = MongoClient(os.environ['DATABASE_URL'])
+        self.client = MongoClient(os.environ['DATABASE_URL'])
 
     def stories_scraping(self):
         page = requests.get(url=self.src_url)
@@ -21,7 +21,12 @@ class Scraping:
 
         for i in pages:
             print('Processing: ' + self.src_url + i.attrs['href'])
-            self.story_scraping(self.src_url + i.attrs['href'])
+            try:
+                self.story_scraping(self.src_url + i.attrs['href'])
+            except:
+                print('Error: ' + self.src_url + i.attrs['href'])
+        
+        print('Successfully fetched and sent to RabbitMQ')
 
     def story_scraping(self, url):
         page = requests.get(url=url)
@@ -52,9 +57,11 @@ class Scraping:
         connection = pika.BlockingConnection(connection_parameters)
 
         channel = connection.channel()
-        channel.queue_declare(queue='news_queue', durable=True)
+        channel.queue_declare(queue='news_updates', durable=True)
 
-        channel.basic_publish(exchange='', routing_key='news_queue', body=json.dumps(post))
+        channel.basic_publish(exchange='', routing_key='news_updates', body=json.dumps(post))
+        db = self.client.get_database('ExpressNews')
+        db.stories.insert_one(post)
         print(" [x] Sent %r" % post)
         connection.close()
 
