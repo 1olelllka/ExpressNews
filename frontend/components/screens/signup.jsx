@@ -3,6 +3,8 @@ import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
 import { useNavigation } from '@react-navigation/native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function Signup() {
     const navigation = useNavigation();
@@ -27,26 +29,28 @@ export default function Signup() {
 
             {/* Form */}
             <View className = "flex items-center mx-4 space-y-4">
-                <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full ">
-                    <TextInput placeholder='Email' placeholderTextColor={"gray"}  />
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(200).duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full ">
-                    <TextInput placeholder='Username' placeholderTextColor={"gray"}  />
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(400).duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full mb-3">
-                    <TextInput placeholder='Password' placeholderTextColor={"gray"} secureTextEntry  />
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(600).duration(1000).springify()} className = "w-full">
-                    <TouchableOpacity className = "w-full p-3 rounded-2xl" style = {{backgroundColor: '#EE6D33'}}>
-                        <Text className = "text-xl font-bold text-white text-center">Sign Up</Text>
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(800).duration(1000).springify()} className = "flex-row justify-center">
-                    <Text>Already have an account? </Text>
-                    <TouchableOpacity onPress = {() => navigation.push("Login")}>
-                        <Text className = "text-sky-600">Login</Text>
-                    </TouchableOpacity>
-                </Animated.View>
+                <KeyboardAwareScrollView showsVerticalScrollIndicator = {false} style = {{width: wp(100)}} className = "flex space-y-4" contentContainerStyle = {{alignItems: 'center', marginLeft: hp(1), marginRight: hp(1)}}>
+                    <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full ">
+                        <TextInput placeholder='Email' placeholderTextColor={"gray"}  />
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(200).duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full ">
+                        <TextInput placeholder='Username' placeholderTextColor={"gray"}  />
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(400).duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full mb-3">
+                        <TextInput placeholder='Password' placeholderTextColor={"gray"} secureTextEntry  />
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(600).duration(1000).springify()} className = "w-full">
+                        <TouchableOpacity className = "w-full p-3 rounded-2xl" style = {{backgroundColor: '#EE6D33'}}>
+                            <Text className = "text-xl font-bold text-white text-center">Sign Up</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(800).duration(1000).springify()} className = "flex-row justify-center">
+                        <Text>Already have an account? </Text>
+                        <TouchableOpacity onPress = {() => navigation.push("Login")}>
+                            <Text className = "text-sky-600">Login</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                </KeyboardAwareScrollView>
             </View>
         </View>
     </View>   

@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, TouchableOpacity, Platform} from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, Platform, ScrollView} from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
@@ -28,58 +28,58 @@ export default function Login() {
             </View>
 
             {/* Form */}
-            <View className = "flex items-center mx-4 space-y-4" style = {{marginTop: Platform.OS === 'android' ? hp(6) : 0}}>
-                <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full">
-                <KeyboardAwareScrollView  keyboardShouldPersistTaps={'always'} showsVerticalScrollIndicator = {false}> 
-                    <TextInput placeholder='Email' placeholderTextColor={"gray"}   />
+
+                <View style = {{marginTop: Platform.OS === 'android' ? hp(6) : 0}}>
+                    <KeyboardAwareScrollView showsVerticalScrollIndicator = {false} style = {{width: wp(100)}} className = "flex space-y-4" contentContainerStyle = {{alignItems: 'center', marginLeft: hp(1), marginRight: hp(1)}}>
+                    <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full">
+                            <TextInput placeholder='Email' placeholderTextColor={"gray"}   />
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(200).duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full mb-3">
+                        <TextInput placeholder='Password' placeholderTextColor={"gray"} secureTextEntry  />
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(400).duration(1000).springify()} className = "w-full">
+                        <TouchableOpacity className = "w-full p-3 rounded-2xl flex-row justify-center" style = {{backgroundColor: '#7289da',
+                            shadowColor: 'rgba(0, 0, 0, 0.3)',
+                            shadowOpacity: 0.8,
+                            elevation: 6,
+                            shadowRadius: 15 ,
+                            shadowOffset : { width: 1, height: 13}
+                        }}>
+                            <Text className = "text-xl font-bold text-white text-center mr-2">Continue with Discord</Text>
+                            <FontAwesome6 name="discord" size={24} color="white" />
+                        </TouchableOpacity>
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(600).duration(1000).springify()} className = "w-full">
+                        <TouchableOpacity className = "w-full p-3 rounded-2xl flex-row justify-center border-neutral-500" style = {{
+                            backgroundColor: 'white', 
+                            shadowColor: 'rgba(0, 0, 0, 0.4)',
+                            shadowOpacity: 0.8,
+                            elevation: 6,
+                            shadowRadius: 15 ,
+                            shadowOffset : { width: 1, height: 13}}}>
+                            <Text className = "text-xl font-bold text-black text-center mr-2">Continue with Google</Text>
+                            <FontAwesome6 name="google" size={24} color="black" />
+                        </TouchableOpacity>
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(800).duration(1000).springify()} className = "w-full">
+                        <TouchableOpacity className = "w-full p-3 rounded-2xl" style = {{backgroundColor: '#EE6D33',
+                            shadowColor: 'rgba(0, 0, 0, 0.3)',
+                            shadowOpacity: 0.8,
+                            elevation: 6,
+                            shadowRadius: 15 ,
+                            shadowOffset : { width: 1, height: 13}
+                        }}>
+                            <Text className = "text-xl font-bold text-white text-center">Login</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                    <Animated.View entering={FadeInDown.delay(1000).duration(1000).springify()} className = "flex-row justify-center">
+                        <Text>Don't have an account? </Text>
+                        <TouchableOpacity onPress = {() => navigation.push("Signup")}>
+                            <Text className = "text-sky-600">Sign up</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
                     </KeyboardAwareScrollView>
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(200).duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full mb-3">
-                    <TextInput placeholder='Password' placeholderTextColor={"gray"} secureTextEntry  />
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(400).duration(1000).springify()} className = "w-full">
-                    <TouchableOpacity className = "w-full p-3 rounded-2xl flex-row justify-center" style = {{backgroundColor: '#7289da',
-                        shadowColor: 'rgba(0, 0, 0, 0.3)',
-                        shadowOpacity: 0.8,
-                        elevation: 6,
-                        shadowRadius: 15 ,
-                        shadowOffset : { width: 1, height: 13}
-                    }}>
-                        <Text className = "text-xl font-bold text-white text-center mr-2">Continue with Discord</Text>
-                        <FontAwesome6 name="discord" size={24} color="white" />
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(600).duration(1000).springify()} className = "w-full">
-                    <TouchableOpacity className = "w-full p-3 rounded-2xl flex-row justify-center border-neutral-500" style = {{
-                        backgroundColor: 'white', 
-                        shadowColor: 'rgba(0, 0, 0, 0.4)',
-                        shadowOpacity: 0.8,
-                        elevation: 6,
-                        shadowRadius: 15 ,
-                        shadowOffset : { width: 1, height: 13}}}>
-                        <Text className = "text-xl font-bold text-black text-center mr-2">Continue with Google</Text>
-                        <FontAwesome6 name="google" size={24} color="black" />
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(800).duration(1000).springify()} className = "w-full">
-                    <TouchableOpacity className = "w-full p-3 rounded-2xl" style = {{backgroundColor: '#EE6D33',
-                        shadowColor: 'rgba(0, 0, 0, 0.3)',
-                        shadowOpacity: 0.8,
-                        elevation: 6,
-                        shadowRadius: 15 ,
-                        shadowOffset : { width: 1, height: 13}
-                    }}>
-                        <Text className = "text-xl font-bold text-white text-center">Login</Text>
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View entering={FadeInDown.delay(1000).duration(1000).springify()} className = "flex-row justify-center">
-                    <Text>Don't have an account? </Text>
-                    <TouchableOpacity onPress = {() => navigation.push("Signup")}>
-                        <Text className = "text-sky-600">Sign up</Text>
-                    </TouchableOpacity>
-                </Animated.View>
-                
-            </View>
+                </View>
         </View>
     </View>   
   )
