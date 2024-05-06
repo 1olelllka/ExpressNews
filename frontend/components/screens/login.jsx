@@ -1,10 +1,11 @@
-import { View, Text, Image, TextInput, TouchableOpacity} from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, Platform} from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function Login() {
     const navigation = useNavigation();
@@ -20,16 +21,18 @@ export default function Login() {
         </View>
 
         {/* title and form */}
-        <View className = "h-full w-full flex pt-64 justify-around pb-10">
+        <View className = "h-full w-full flex justify-around pb-10" style = {{paddingTop: Platform.OS === "ios" ? hp(25) : hp(35)}}>
             {/* Title */}
             <View  className = "flex items-center">
                 <Animated.Text entering={FadeInUp.duration(1000).springify()} className = "text-white font-bold text-5xl tracking-wider">Login</Animated.Text>
             </View>
 
             {/* Form */}
-            <View className = "flex items-center mx-4 space-y-4">
+            <View className = "flex items-center mx-4 space-y-4" style = {{marginTop: Platform.OS === 'android' ? hp(6) : 0}}>
                 <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full">
+                <KeyboardAwareScrollView  keyboardShouldPersistTaps={'always'} showsVerticalScrollIndicator = {false}> 
                     <TextInput placeholder='Email' placeholderTextColor={"gray"}   />
+                    </KeyboardAwareScrollView>
                 </Animated.View>
                 <Animated.View entering={FadeInDown.delay(200).duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full mb-3">
                     <TextInput placeholder='Password' placeholderTextColor={"gray"} secureTextEntry  />
