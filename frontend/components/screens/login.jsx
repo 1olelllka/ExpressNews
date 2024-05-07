@@ -21,7 +21,7 @@ export default function Login() {
         </View>
 
         {/* title and form */}
-        <View className = "h-full w-full flex justify-around pb-10" style = {{paddingTop: Platform.OS === "ios" ? hp(25) : hp(35)}}>
+        <View className = "h-full w-full flex justify-around pb-10" style = {{paddingTop: Platform.OS === "ios" ? hp(35) : hp(35)}}>
             {/* Title */}
             <View  className = "flex items-center">
                 <Animated.Text entering={FadeInUp.duration(1000).springify()} className = "text-white font-bold text-5xl tracking-wider">Login</Animated.Text>
@@ -29,7 +29,7 @@ export default function Login() {
 
             {/* Form */}
 
-                <View style = {{marginTop: Platform.OS === 'android' ? hp(6) : 0}}>
+                <View style = {{marginTop: Platform.OS === 'android' ? hp(6) : hp(10)}}>
                     <KeyboardAwareScrollView showsVerticalScrollIndicator = {false} style = {{width: wp(100)}} className = "flex space-y-4" contentContainerStyle = {{alignItems: 'center', marginLeft: hp(1), marginRight: hp(1)}}>
                     <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full">
                             <TextInput placeholder='Email' placeholderTextColor={"gray"}   />
