@@ -46,6 +46,7 @@ class Scraping:
             for j in news['articles']:
                 j['category'] = i['category']
                 db.stories.insert_one(j)
+            break       # ONLY FOR DEVELOPMENT (CALLS ARE LIMITED)
         
 
 
