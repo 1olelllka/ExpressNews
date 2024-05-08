@@ -37,14 +37,26 @@ class Scraping:
             channel.basic_publish(exchange='', routing_key='breaking_news', body=json.dumps(i))
             print(" [x] Sent %r" % i['title'])
         connection.close()
+    
+    def news_scraping(self):
+        db = self.client.get_database('ExpressNews')
+        sources = newsapi.get_sources(language='en')
+        for i in sources['sources']:
+            news = newsapi.get_everything(sources=i['id'], language='en')
+            for j in news['articles']:
+                j['category'] = i['category']
+                db.stories.insert_one(j)
+        
+
 
 # RUN
-
 scraping = Scraping()
-# scraping.source_scraping()
-# Stories Scraping
-scraping.breaking_news()
 
+# scraping.source_scraping()
+# scraping.breaking_news()
+scraping.news_scraping()
+
+# -----------------------------------------------------------------------------
 # Will be done later
 # schedule.every(10).seconds.do(scraping.breaking_news())
 # while True:
