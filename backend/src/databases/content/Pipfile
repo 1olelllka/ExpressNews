@@ -9,6 +9,8 @@ requests = "*"
 pymongo = "*"
 python-dotenv = "*"
 pika = "*"
+newsapi-python = "*"
+schedule = "*"
 
 [dev-packages]
 

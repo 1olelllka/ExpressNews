@@ -11,14 +11,14 @@ export default function App() {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    socket.on("news_updates", (data) => {
+    socket.on("breaking_news", (data) => {
       setNews((prevMessages) => [...prevMessages, data]);
     });
     return () => socket.disconnect();
   }, []);
   const renderItem = ({ item }) => (
     <View style={{ borderBottomWidth: 1, padding: 10 }}>
-      <Text>{item.header}</Text>
+      <Text>{item.title}</Text>
     </View>
   );
   return (

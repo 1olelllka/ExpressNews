@@ -2,44 +2,51 @@ const amqplib = require("amqplib/callback_api");
 const discordUser = require("../databases/schemas/discordUser");
 const googleUser = require("../databases/schemas/googleUser");
 const User = require("../databases/schemas/localUser");
+const Sources = require("../databases/schemas/sources");
 
-const server = require("../../index").server;
 const io = require("../../index").io;
 
-amqplib.connect("amqp://localhost", (err, conn) => {
-  if (err) {
-    console.log(err);
+amqplib.connect(process.env.RABITMQ_URL, (error, connection) => {
+  if (error) {
+    console.log(error);
   }
   console.log(
     "\x1b[41m%s\x1b[0m",
     "Message Broker ----> Connected to RabbitMQ <----"
   );
-  const queue_name = "news_updates";
-
-  conn.createChannel((err, ch) => {
-    if (err) {
-      console.log(err);
+  connection.createChannel((error, channel) => {
+    if (error) {
+      console.log(error);
     }
-    ch.assertQueue(queue_name, { durable: true });
-    ch.consume(queue_name, async (msg) => {
-      if (msg !== null) {
-        const data = JSON.parse(msg.content.toString());
-        console.log("Received data from scraping server");
+    const queue = "breaking_news";
 
-        const interestedUsers = await discordUser.find({
-          preferred_topics: { $in: data.category },
-        });
-        console.log(interestedUsers);
-        interestedUsers.forEach((user) => {
-          io.to(user._id.toString()).emit("news_updates", data);
-        });
-        ch.ack(msg);
-      }
+    channel.assertQueue(queue, {
+      durable: true,
+    });
+
+    channel.consume(queue, async (msg) => {
+      const data = JSON.parse(msg.content.toString());
+      console.log("Received data from API");
+      const source =
+        (await Sources.findOne({ name: data.source.name })) || "general";
+      const user =
+        (await discordUser.find({
+          preferred_topics: { $in: source.category },
+        })) ||
+        (await googleUser.find({
+          preferred_topics: { $in: source.category },
+        })) ||
+        (await User.find({ preferred_topics: { $in: source.category } }));
+      console.log(user || "No user found");
+      user.forEach((u) => {
+        io.to(u._id.toString()).emit("breaking_news", data);
+      });
+      channel.ack(msg);
     });
   });
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   console.log(
     "\x1b[41m%s\x1b[0m",
     `Socket.IO ----> Client  \x1b[43m<< ${socket.handshake.auth.userId} >>\x1b[0m\x1b[41m connected via Socket.IO <----\x1b[0m`
@@ -47,4 +54,4 @@ io.on("connection", (socket) => {
   socket.join(socket.handshake.auth.userId);
 });
 
-module.exports = { server, amqplib };
+module.exports = { amqplib };

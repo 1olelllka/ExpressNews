@@ -10,7 +10,7 @@ const basicUrl = process.env.BASIC_URL;
 // Server and Socket.io
 const server = createServer(app);
 const io = new Server(server);
-module.exports = { server, io }; // for messages
+module.exports = { io }; // for messages
 
 // Sessions Middleware
 const session = require("express-session");

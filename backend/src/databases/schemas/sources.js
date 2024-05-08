@@ -1,18 +1,31 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
+const Category = require("./Category");
 
 const SourceModel = new Schema({
+  id: {
+    type: String,
+    required: false,
+  },
   name: {
     type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
+    required: false,
   },
   url: {
     type: String,
-    required: true,
+    required: false,
+  },
+  category: {
+    type: String,
+    required: false,
+  },
+  language: {
+    type: String,
+    required: false,
+  },
+  country: {
+    type: String,
+    required: false,
   },
 });
 
