@@ -54,8 +54,8 @@ class Scraping:
 scraping = Scraping()
 
 # scraping.source_scraping()
-# scraping.breaking_news()
-scraping.news_scraping()
+scraping.breaking_news()
+# scraping.news_scraping()
 
 # -----------------------------------------------------------------------------
 # Will be done later

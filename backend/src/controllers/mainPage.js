@@ -8,6 +8,12 @@ const getStories = async (req, res) => {
       page = 1;
     }
     const startIndex = (page - 1) * 5;
+    if (req.query.category) {
+      const stories = await Stories.find({ category: req.query.category })
+        .limit(5)
+        .skip(startIndex);
+      return res.send(stories);
+    }
     const stories = await Stories.find().limit(5).skip(startIndex);
     return res.send(stories);
   } catch (err) {
@@ -46,19 +52,4 @@ const getStoriesSearch = async (req, res) => {
   }
 };
 
-const getStoriesCategory = async (req, res) => {
-  try {
-    var category = req.query.category;
-    if (!category) {
-      res.sendStatus(400);
-    }
-    const stories = await Stories.find({
-      category: { $regex: `${category}`, $options: "i" },
-    });
-    res.send(stories);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-module.exports = { getStories, getStoriesSearch, getStoriesCategory };
+module.exports = { getStories, getStoriesSearch };
