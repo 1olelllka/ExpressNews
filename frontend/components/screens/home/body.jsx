@@ -2,6 +2,8 @@ import { View, Text, Image } from 'react-native'
 import React, {useState, useRef} from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { Entypo, FontAwesome6 } from '@expo/vector-icons';
+import Modal from "react-native-modal";
 
 function getFormattedDate(date) {
     const day = date.toLocaleDateString('en-US', { weekday: 'long' });
@@ -30,6 +32,9 @@ export default function Body() {
 
   const _carousel = useRef();
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const show = () => setModalVisible(true);
+  const hide = () => setModalVisible(false);
   return (
     <View className = "ml-4 mt-5 mr-4">
         <View>
@@ -40,7 +45,7 @@ export default function Body() {
             <Text className = "font-bold" style = {{fontSize: hp(3)}}>Top Stories</Text>
             <Text className = "font-semibold" style = {{color: '#EE6D33', fontSize: hp(2)}}>See all</Text>
           </View>
-          <View className = "mt-4 mr-4 justify-center">
+          <View className = "mt-4 mr-4 justify-center flex-col">
             <Carousel
                 ref={_carousel}
                 data={data}
@@ -50,13 +55,48 @@ export default function Body() {
                 sliderWidth={wp(93)}
                 itemWidth={wp(93)}
                 onSnapToItem={(index) => setActiveDotIndex(index)}
-                renderItem={({ item, index }) => {
+                renderItem={({ item }) => {
                   return(
                     <View className = "">
+                      <Modal isVisible = {modalVisible} onBackdropPress={hide} backdropOpacity={0.2} style= {{marginLeft: wp(20)}} animationIn={'fadeIn'} animationOut={'fadeOut'}>
+                        <View className = "">
+                          <View className = "flex self-center justify-center rounded-lg" style = {{backgroundColor: 'white', width: wp(60), height: hp(25)}}>
+                            <View className = "self-center" style = {{width: wp(50)}}>
+                              <View className = "border-b-2 pb-2 border-neutral-300">
+                                <View className = "flex-row items-center justify-between">
+                                  <Text className= 'text-lg text-neutral-600 font-semibold'>Save article</Text>
+                                  <FontAwesome6 name="bookmark" size={24} color="gray" />
+                                </View>
+                                <View className = "flex-row items-center justify-between" style = {{marginTop: hp(1.5)}}>
+                                  <Text className= 'text-lg text-neutral-600 font-semibold'>Share article</Text>
+                                  <FontAwesome6 name="share-square" size={24} color="gray" />
+                                </View>
+                                <View className = "flex-row items-center justify-between" style = {{marginTop: hp(1.5)}}>
+                                  <Text className= 'text-lg text-neutral-600 font-semibold'>Copy link</Text>
+                                  <FontAwesome6 name="copy" size={24} color="gray" />
+                                </View>
+                              </View>
+                              <View className = "">
+                                <View className = "flex-row items-center justify-between" style = {{marginTop: hp(0.5)}}> 
+                                  <Text className= 'text-lg text-neutral-600 font-semibold'>Go to {item.link}</Text>
+                                  <FontAwesome6 name="arrow-right" size={24} color="gray" />
+                                </View>                    
+                                <View className = "flex-row items-center justify-between" style = {{marginTop: hp(1.5)}}>
+                                  <Text className= 'text-lg text-neutral-600 font-semibold'>Send a feedback</Text>
+                                  <FontAwesome6 name="paper-plane" size={24} color="gray" />
+                                </View>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                      </Modal>
                       <Image source={item.image} style={{width: wp(92), height: wp(50)}} />
                       <Text className = "text-neutral-500 font-medium mt-4">{item.link}</Text>
                       <Text className = "mt-3 font-medium" style = {{fontSize: hp(2)}}>{item.title}</Text>
-                      <Text className = "text-neutral-500 font-medium mt-3">{item.date}</Text>
+                      <View className = 'flex-row items-center justify-between mt-3 mr-2'>
+                        <Text className = "text-neutral-500 font-medium">{item.date}</Text>
+                        <Entypo name="dots-three-horizontal" size={24} color="gray" onPress={show} />
+                      </View>
                     </View>
                   )}}
             />
