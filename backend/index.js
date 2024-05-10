@@ -68,7 +68,7 @@ app.use(
 );
 
 // RabbitMQ + Socket.IO
-require("./src/messages/rabbitmq");
+require("./src/messages/messages");
 
 // Server
 server.listen(PORT, () => {

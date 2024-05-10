@@ -6,7 +6,6 @@ import json
 from newsapi import NewsApiClient
 # import time
 # import schedule
-
 load_dotenv()
 
 newsapi = NewsApiClient(api_key=os.environ['NEWS_API_KEY'])
@@ -45,6 +44,8 @@ class Scraping:
             news = newsapi.get_everything(sources=i['id'], language='en')
             for j in news['articles']:
                 j['category'] = i['category']
+                if db.stories.count_documents({"title": j['title']}) == 1:
+                    continue
                 db.stories.insert_one(j)
             break       # ONLY FOR DEVELOPMENT (CALLS ARE LIMITED)
         
