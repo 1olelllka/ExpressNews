@@ -16,6 +16,22 @@ export default function App() {
     });
     return () => socket.disconnect();
   }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/v1/home/notifications", {
+      method: "GET",
+      headers: {
+        Authorization:
+          "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM3ZDQ0YmM1MmIyMDM3NDAyYThmMTkiLCJpYXQiOjE3MTU0MTM2MDQsImV4cCI6MTcxNTQxNzIwNH0.Jd1ftLN4jk_cdH--nHr-C_Xjn4-t3EaAG5D6ez8odcc",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (news.length == 0) {
+          setNews(data);
+        }
+      });
+  }, []);
   const renderItem = ({ item }) => (
     <View style={{ borderBottomWidth: 1, padding: 10 }}>
       <Text>{item.title}</Text>

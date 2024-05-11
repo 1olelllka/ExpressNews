@@ -24,7 +24,7 @@ const getStories = async (req, res) => {
 const getStoriesSearch = async (req, res) => {
   try {
     var page = req.query.page;
-    const search = req.query.query;
+    const search = req.query.query + "*";
     var searches = [];
     const exists = await client.hGet(req.user._id.toString(), "searches");
 
@@ -52,4 +52,15 @@ const getStoriesSearch = async (req, res) => {
   }
 };
 
-module.exports = { getStories, getStoriesSearch };
+const getNotifications = async (req, res) => {
+  try {
+    const notifications = await client.json.get(
+      req.user._id + "_breaking_news"
+    );
+    res.send(notifications.breaking);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = { getStories, getStoriesSearch, getNotifications };
