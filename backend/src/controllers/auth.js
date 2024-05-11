@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const User = require("../databases/schemas/localUser");
+const User = require("../databases/schemas/User");
 
 const register = async (req, res, next) => {
   const { username, email, password, full_name } = req.body;

@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../databases/schemas/localUser");
-const discordUser = require("../databases/schemas/discordUser");
-const googleUser = require("../databases/schemas/googleUser");
+const User = require("../databases/schemas/User");
 const client = require("../databases/redis");
 
 const authenticate = async (req, res, next) => {
@@ -12,10 +10,7 @@ const authenticate = async (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user =
-      (await User.findById(decoded.userId)) ||
-      (await discordUser.findById(decoded.userId)) ||
-      (await googleUser.findById(decoded.userId));
+    const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

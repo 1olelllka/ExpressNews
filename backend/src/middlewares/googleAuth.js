@@ -1,6 +1,6 @@
 const passport = require("passport");
 const { Strategy } = require("passport-google-oauth20");
-const GoogleUser = require("../databases/schemas/googleUser");
+const User = require("../databases/schemas/User");
 const jwt = require("jsonwebtoken");
 
 passport.serializeUser((user, done) => {
@@ -11,7 +11,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id, done) => {
   console.log("Deserializing User");
   try {
-    const user = await GoogleUser.findById(id);
+    const user = await User.findById(id);
     if (!user) {
       return done(new Error("User not found"), null);
     }
@@ -33,14 +33,14 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       const googleId = profile._json.sub;
       try {
-        const user = await GoogleUser.findOne({ googleId: googleId });
+        const user = await User.findOne({ googleId: googleId });
         if (user) {
           const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
           return done(null, user, { token: token, userId: user._id });
         } else {
-          const newUser = new GoogleUser({
+          const newUser = new User({
             googleId: googleId,
             username: profile._json.name.replace(/\s+/g, ""),
             email: profile._json.email,

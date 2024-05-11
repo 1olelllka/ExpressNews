@@ -1,6 +1,4 @@
-const discordUser = require("../databases/schemas/discordUser");
-const googleUser = require("../databases/schemas/googleUser");
-const User = require("../databases/schemas/localUser");
+const User = require("../databases/schemas/User");
 const Story = require("../databases/schemas/Story");
 const client = require("../databases/redis");
 
@@ -12,10 +10,7 @@ async function showSavedStories(req, res) {
       const result = await Story.find({ _id: { $in: JSON.parse(cached) } });
       return res.send(result);
     } else {
-      const dbUser =
-        (await User.findById(userId)) ||
-        (await discordUser.findById(userId)) ||
-        (await googleUser.findById(userId));
+      const dbUser = await User.findById(userId);
       const saved_stories = dbUser.saved_stories;
       await client.hSet(
         userId.toString(),
@@ -34,12 +29,9 @@ async function showSavedStories(req, res) {
 async function saveStory(req, res) {
   const userId = req.user._id;
   const { storyId } = req.body;
-  const user =
-    (await User.findById(userId)) ||
-    (await discordUser.findById(userId)) ||
-    (await googleUser.findById(userId));
+  const user = await User.findById(userId);
   try {
-    await user.saved_stories.push(storyId);
+    user.saved_stories.push(storyId);
     await user.save();
 
     await client.hSet(
@@ -57,10 +49,7 @@ async function saveStory(req, res) {
 async function deleteStory(req, res) {
   const userId = req.user._id;
   const { storyId } = req.body;
-  const user =
-    (await User.findById(userId)) ||
-    (await discordUser.findById(userId)) ||
-    (await googleUser.findById(userId));
+  const user = await User.findById(userId);
   try {
     await user.saved_stories.pull(storyId);
     await user.save();

@@ -1,6 +1,6 @@
 const passport = require("passport");
 const { Strategy } = require("passport-discord");
-const DiscordUser = require("../databases/schemas/discordUser");
+const User = require("../databases/schemas/User");
 const jwt = require("jsonwebtoken");
 
 passport.serializeUser((user, done) => {
@@ -11,7 +11,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id, done) => {
   console.log("Deserializing User");
   try {
-    const user = await DiscordUser.findById(id);
+    const user = await User.findById(id);
     if (!user) {
       return done(new Error("User not found"), null);
     }
@@ -33,14 +33,14 @@ passport.use(
       const username = profile.username;
       const email = profile.email;
       try {
-        const user = await DiscordUser.findOne({ discordId: profile.id });
+        const user = await User.findOne({ discordId: profile.id });
         if (user) {
           const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
           return done(null, user, { token: token, userId: user._id });
         } else {
-          const newUser = new DiscordUser({
+          const newUser = new User({
             username,
             email: email,
             full_name: profile.username,

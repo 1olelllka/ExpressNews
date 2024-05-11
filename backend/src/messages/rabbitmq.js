@@ -1,8 +1,5 @@
 const amqplib = require("amqplib/callback_api");
-const io = require("../../index").io;
-const discordUser = require("../databases/schemas/discordUser");
-const googleUser = require("../databases/schemas/googleUser");
-const User = require("../databases/schemas/localUser");
+const User = require("../databases/schemas/User");
 const Sources = require("../databases/schemas/sources");
 
 const io = require("./messages");
@@ -32,14 +29,9 @@ amqplib.connect(process.env.RABITMQ_URL, (error, connection) => {
       console.log("Received data from API");
       const source =
         (await Sources.findOne({ name: data.source.name })) || "general";
-      const user =
-        (await discordUser.find({
-          preferred_topics: { $in: source.category },
-        })) ||
-        (await googleUser.find({
-          preferred_topics: { $in: source.category },
-        })) ||
-        (await User.find({ preferred_topics: { $in: source.category } }));
+      const user = await User.find({
+        preferred_topics: { $in: source.category },
+      });
       console.log(user || "No user found");
       user.forEach(async (u) => {
         const exists = await client.json.type(
@@ -53,12 +45,6 @@ amqplib.connect(process.env.RABITMQ_URL, (error, connection) => {
             data
           );
         }
-        // results.push(data);
-        // await client.set(
-        //   u._id.toString() + "_breaking_news",
-        //   JSON.stringify(results),
-        //   { EX: 60 * 30 }
-        // );
         io.io.to(u._id.toString()).emit("breaking_news", data);
       });
       channel.ack(msg);
