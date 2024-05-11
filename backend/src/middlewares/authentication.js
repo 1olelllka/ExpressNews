@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../databases/schemas/localUser");
 const discordUser = require("../databases/schemas/discordUser");
 const googleUser = require("../databases/schemas/googleUser");
+const client = require("../databases/redis");
 
 const authenticate = async (req, res, next) => {
   console.log(req.session);
@@ -25,6 +26,15 @@ const authenticate = async (req, res, next) => {
     // }
 
     req.user = user;
+    const exists = await client.json.type(
+      req.user._id.toString() + "_breaking_news"
+    );
+    if (exists == null) {
+      await client.json.set(req.user._id.toString() + "_breaking_news", "$", {
+        breaking: [],
+      });
+      await client.expire(req.user._id.toString() + "_breaking_news", 60 * 30);
+    }
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid token" });
