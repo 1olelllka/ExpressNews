@@ -69,9 +69,11 @@ app.use(
 
 // RabbitMQ + Socket.IO
 require("./src/messages/messages");
-require("./src/messages/rabbitmq");
+// require("./src/messages/rabbitmq");
 
 // Server
 server.listen(PORT, () => {
   console.log(`The server is running on http://localhost:${PORT}/`);
 });
+
+module.exports = app;
