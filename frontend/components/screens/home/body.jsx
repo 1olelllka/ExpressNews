@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native'
 import React, {useState, useRef} from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -33,8 +33,17 @@ export default function Body() {
   const _carousel = useRef();
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const show = () => setModalVisible(true);
   const hide = () => setModalVisible(false);
+  const show2 = () => setModalVisible2(true);
+  const hide2 = () => setModalVisible2(false);
+  const ModalSwitch = () => {
+    hide();
+    setTimeout(() => {
+      show2();
+    }, 400)
+  }
   return (
     <View className = "ml-4 mt-5 mr-4">
         <View>
@@ -43,7 +52,7 @@ export default function Body() {
         <View className = "mt-5">
           <View className = "flex-row justify-between items-center">
             <Text className = "font-bold" style = {{fontSize: hp(3)}}>Top Stories</Text>
-            <Text className = "font-semibold" style = {{color: '#EE6D33', fontSize: hp(2)}}>See all</Text>
+              <Text className = "font-semibold" style = {{color: '#EE6D33', fontSize: hp(2)}} onPress={show2} >See all</Text>
           </View>
           <View className = "mt-4 mr-4 justify-center flex-col">
             <Carousel
@@ -69,7 +78,7 @@ export default function Body() {
                                 </View>
                                 <View className = "flex-row items-center justify-between" style = {{marginTop: hp(1.5)}}>
                                   <Text className= 'text-lg text-neutral-600 font-semibold'>Share article</Text>
-                                  <FontAwesome6 name="share-square" size={24} color="gray" />
+                                  <FontAwesome6 name="share-nodes" size={24} color="gray" />                                  
                                 </View>
                                 <View className = "flex-row items-center justify-between" style = {{marginTop: hp(1.5)}}>
                                   <Text className= 'text-lg text-neutral-600 font-semibold'>Copy link</Text>
@@ -80,16 +89,18 @@ export default function Body() {
                                 <View className = "flex-row items-center justify-between" style = {{marginTop: hp(0.5)}}> 
                                   <Text className= 'text-lg text-neutral-600 font-semibold'>Go to {item.link}</Text>
                                   <FontAwesome6 name="arrow-right" size={24} color="gray" />
-                                </View>                    
-                                <View className = "flex-row items-center justify-between" style = {{marginTop: hp(1.5)}}>
-                                  <Text className= 'text-lg text-neutral-600 font-semibold'>Send a feedback</Text>
-                                  <FontAwesome6 name="paper-plane" size={24} color="gray" />
                                 </View>
+                                <TouchableOpacity onPress = {ModalSwitch}>          
+                                  <View className = "flex-row items-center justify-between" style = {{marginTop: hp(1.5)}}>
+                                      <Text className= 'text-lg text-neutral-600 font-semibold'>Send a feedback</Text>
+                                      <FontAwesome6 name="paper-plane" size={24} color="gray" />
+                                  </View>
+                                </TouchableOpacity>
                               </View>
                             </View>
                           </View>
                         </View>
-                      </Modal>
+                      </Modal>                  
                       <Image source={item.image} style={{width: wp(92), height: wp(50)}} />
                       <Text className = "text-neutral-500 font-medium mt-4">{item.link}</Text>
                       <Text className = "mt-3 font-medium" style = {{fontSize: hp(2)}}>{item.title}</Text>
@@ -121,6 +132,25 @@ export default function Body() {
             </View>
           </View>
         </View>
+        <Modal isVisible = {modalVisible2} onBackdropPress={hide2} backdropOpacity={0.2} style = {{margin: 0}}  >
+        <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={Platform.select({ios: -hp(1), android: hp(5)})} >
+          <View className = "bg-white rounded-xl" style= {{width: wp(100), height: hp(30), marginTop: hp(70)}}>
+            <View className = "border-b-2 pb-3 border-neutral-200">
+              <View className = "mx-5 mt-5 flex-row items-center justify-between">
+                <FontAwesome6 name="xmark" size={30} color="black" onPress = {hide2} />
+                <Text className = "font-semibold text-lg">Send feedback</Text>
+                <FontAwesome6 name="paper-plane" size={24} color="black" />
+              </View>
+            </View>
+            <View className = "mx-5 mt-5" style= {{margin: 'auto'}}>
+              <Text className = "font-bold text-sm">Describe the issue</Text>
+              <TextInput style = {{borderWidth: 1, height: hp(15), padding: hp(1)}} placeholder='Describe the issue' multiline = {true} textAlignVertical='top'  />
+            </View>
+            <View className = 'border-b-2 border-neutral-200 mt-5' />
+          </View>
+          </KeyboardAvoidingView>
+        </Modal>
     </View>
+    
   )
 }

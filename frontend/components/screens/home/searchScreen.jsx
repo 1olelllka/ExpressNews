@@ -79,7 +79,7 @@ export default function SearchScreen() {
                                         <View className = "flex rounded-full items-center justify-center" style = {{width: hp(4), height: hp(4), backgroundColor: "rgba(249, 115, 22, 0.3)"}}>
                                             <MaterialCommunityIcons name="popcorn" size={22} color="rgb(249 115 22)" />
                                         </View>
-                                        <Text className = "font-semibold text-xl ml-4">Pop culture</Text>
+                                        <Text className = "font-semibold text-lg ml-4">Pop culture</Text>
                                     </View>
                                     <FontAwesome6 name="bookmark" size={24} color="gray" />
                                 </View>
@@ -88,7 +88,7 @@ export default function SearchScreen() {
                                         <View className = "flex rounded-full items-center justify-center" style = {{width: hp(4), height: hp(4), backgroundColor: "rgba(37, 99, 235, 0.4)"}}>
                                             <FontAwesome6 name="computer" size={20} color="rgb(37 99 235)" />
                                         </View>
-                                        <Text className = "font-semibold text-xl ml-4">Technology</Text>
+                                        <Text className = "font-semibold text-lg ml-4">Technology</Text>
                                     </View>
                                     <FontAwesome6 name="bookmark" size={24} color="gray" />
                                 </View>
