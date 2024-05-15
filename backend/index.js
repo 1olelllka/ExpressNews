@@ -30,10 +30,10 @@ client
 
 // Middlewares
 const { authenticate } = require("./src/middlewares/authentication");
-app.use((req, res, next) => {
-  console.log(`${req.method}: ${req.url}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`${req.method}: ${req.url}`);
+//   next();
+// });
 
 app.use(express.json());
 app.use(
@@ -75,5 +75,9 @@ require("./src/messages/messages");
 server.listen(PORT, () => {
   console.log(`The server is running on http://localhost:${PORT}/`);
 });
+
+app.stopServer = () => {
+  server.close();
+};
 
 module.exports = app;

@@ -7,6 +7,12 @@ const register = async (req, res, next) => {
   if (!username || !email || !password || !full_name) {
     return res.status(400).json({ message: "All fields are required" });
   }
+  const existingUser = await User.findOne({ username });
+  if (existingUser) {
+    return res
+      .status(409)
+      .json({ message: "User with the same username already exists" });
+  }
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
@@ -38,7 +44,7 @@ const login = async (req, res, next) => {
     });
     req.session.userId = user._id;
     req.session.token = token;
-    res.sendStatus(201);
+    res.sendStatus(200);
   } catch (err) {
     next(err);
   }

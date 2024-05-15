@@ -3,7 +3,7 @@ const User = require("../databases/schemas/User");
 const client = require("../databases/redis");
 
 const authenticate = async (req, res, next) => {
-  console.log(req.session);
+  // console.log(req.session);
   const token = req.session.token || req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "Authorization required" });
