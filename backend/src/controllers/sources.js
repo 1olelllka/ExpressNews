@@ -47,7 +47,7 @@ const follow = async (req, res) => {
       "following",
       JSON.stringify(user.subscribed)
     );
-    res.sendStatus(200);
+    res.sendStatus(201);
   } catch (err) {
     console.log(err);
   }

@@ -39,7 +39,7 @@ async function saveStory(req, res) {
       "stories",
       JSON.stringify(user.saved_stories)
     );
-    res.sendStatus(200);
+    res.sendStatus(201);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

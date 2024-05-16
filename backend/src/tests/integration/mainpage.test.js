@@ -1,11 +1,11 @@
-const app = require("../../index");
+const app = require("../../../index");
 const supertest = require("supertest");
 const request = supertest(app);
 
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const User = require("../databases/schemas/User");
-const client = require("../databases/redis");
+const User = require("../../databases/schemas/User");
+const client = require("../../databases/redis");
 
 require("dotenv").config();
 
@@ -21,10 +21,6 @@ describe("Main Page API Endpoints", () => {
   beforeAll(async () => {
     await mongoose.connect(process.env.DATABASE_URL);
     const user = await User.create(user_data);
-    await client.json.set(user._id.toString() + "_breaking_news", "$", {
-      breaking: [],
-    });
-    await client.hSet(user._id.toString(), "searches", JSON.stringify([]));
     const mockVerify = jest.fn().mockReturnValue({ userId: user._id });
     jwt.verify = mockVerify;
   });

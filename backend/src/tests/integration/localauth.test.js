@@ -1,10 +1,10 @@
-const app = require("../../index");
+const app = require("../../../index");
 const supertest = require("supertest");
 const request = supertest(app);
 
 const mongoose = require("mongoose");
-const User = require("../databases/schemas/User");
-const client = require("../databases/redis");
+const User = require("../../databases/schemas/User");
+const client = require("../../databases/redis");
 
 require("dotenv").config();
 
@@ -93,6 +93,13 @@ describe("Local Authentication API Endpoints", () => {
         .send({ username: user_data.username, password: "Invalid Password" });
       expect(res.status).toEqual(401);
       expect(res.body).toEqual({ message: "Invalid password" });
+    });
+  });
+  describe("Developers Debugging Endpoint", () => {
+    it("Should return 200 when accessing the endpoint", async () => {
+      const res = await request.get("/api/v1/auth/");
+      expect(res.status).toEqual(200);
+      expect(res.type).toEqual("application/json");
     });
   });
 });
