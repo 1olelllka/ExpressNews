@@ -22,7 +22,6 @@ describe("User Endpoints", () => {
     await mongoose.connect(process.env.DATABASE_URL);
     const user = await User.create(user_data);
     const mockVerify = jest.fn().mockReturnValue({ userId: user._id });
-    console.log(await client.hGet(user._id.toString(), "searches"));
     jwt.verify = mockVerify;
   });
   afterAll(async () => {
@@ -47,7 +46,6 @@ describe("User Endpoints", () => {
       expect(res.status).toEqual(200);
       expect(res.type).toEqual(expect.stringContaining("json"));
       expect(res.body).toHaveProperty("user");
-      console.log(res.body);
     });
   });
   describe("Searches", () => {
