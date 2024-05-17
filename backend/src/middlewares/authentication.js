@@ -19,7 +19,6 @@ const authenticate = async (req, res, next) => {
     // if (decoded.userId != req.session.userId) {
     //   return res.status(401).json({ message: "Error, try again later" });
     // }
-
     req.user = user;
     const exists = await client.json.type(
       req.user._id.toString() + "_breaking_news"
@@ -32,7 +31,7 @@ const authenticate = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401);
   }
 };
 

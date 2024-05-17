@@ -8,7 +8,6 @@ const client = require("../../databases/redis");
 // Just simple status checks
 describe("Discord Authentication API Endpoints", () => {
   afterAll(async () => {
-    await client.flushAll();
     await client.disconnect();
     await mongoose.disconnect();
     await mongoose.connection.close();
