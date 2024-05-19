@@ -1,9 +1,9 @@
 const supertest = require("supertest");
-const app = require("../../../index");
+const app = require("../../index");
 const request = supertest(app);
 
 const mongoose = require("mongoose");
-const client = require("../../databases/redis");
+const client = require("../../src/databases/redis");
 
 // Just simple status checks
 describe("Discord Authentication API Endpoints", () => {

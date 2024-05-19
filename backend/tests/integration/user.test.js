@@ -1,10 +1,10 @@
-const app = require("../../../index");
+const app = require("../../index");
 const supertest = require("supertest");
 const request = supertest(app);
 
 const mongoose = require("mongoose");
-const User = require("../../databases/schemas/User");
-const client = require("../../databases/redis");
+const User = require("../../src/databases/schemas/User");
+const client = require("../../src/databases/redis");
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();

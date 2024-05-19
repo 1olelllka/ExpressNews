@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const User = require("../../databases/schemas/User");
-const client = require("../../databases/redis");
-const { authenticate } = require("../../middlewares/authentication");
+const User = require("../../src/databases/schemas/User");
+const client = require("../../src/databases/redis");
+const { authenticate } = require("../../src/middlewares/authentication");
 
 jest.mock("jsonwebtoken");
-jest.mock("../../databases/schemas/User");
-jest.mock("../../databases/redis");
+jest.mock("../../src/databases/schemas/User");
+jest.mock("../../src/databases/redis");
 
 describe("Authenticate function", () => {
   let req;
