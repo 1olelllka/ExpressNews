@@ -1,16 +1,17 @@
-import { View, Text, Image, TextInput, TouchableOpacity, Platform, ScrollView} from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView} from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 export default function Login() {
     const navigation = useNavigation();
   return (
-    <View className = "bg-white h-full w-full">
+    <KeyboardAvoidingView behavior={"height"} keyboardVerticalOffset={Platform.select({ios: -hp(30), android: -hp(38)})} style = {{flex: 1}}>
+    <View  className = "bg-white h-full w-full">
         <StatusBar style = "light" />
         <Image className = "h-full w-full absolute" source={require('../../assets/images/login/background.png')} />
 
@@ -30,7 +31,7 @@ export default function Login() {
             {/* Form */}
 
                 <View style = {{marginTop: Platform.OS === 'android' ? hp(6) : hp(10)}}>
-                    <KeyboardAwareScrollView showsVerticalScrollIndicator = {false} style = {{width: wp(100)}} className = "flex space-y-4" contentContainerStyle = {{alignItems: 'center', marginLeft: hp(1), marginRight: hp(1)}}>
+                    <View className = "flex space-y-4 mx-2">
                     <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full">
                             <TextInput placeholder='Email' placeholderTextColor={"gray"}   />
                     </Animated.View>
@@ -78,9 +79,10 @@ export default function Login() {
                             <Text className = "text-sky-600">Sign up</Text>
                         </TouchableOpacity>
                     </Animated.View>
-                    </KeyboardAwareScrollView>
+                    </View>
                 </View>
         </View>
     </View>   
+    </KeyboardAvoidingView>
   )
 }

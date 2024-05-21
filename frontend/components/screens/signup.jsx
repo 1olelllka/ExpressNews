@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, TouchableOpacity} from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
@@ -9,7 +9,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 export default function Signup() {
     const navigation = useNavigation();
   return (
-    
     <View className = "bg-white h-full w-full">
         <StatusBar style = "light" />
         <Image className = "h-full w-full absolute" source={require('../../assets/images/login/background.png')} />
@@ -28,8 +27,8 @@ export default function Signup() {
             </View>
 
             {/* Form */}
-            <View className = "flex items-center mx-4 space-y-4">
-                <KeyboardAwareScrollView showsVerticalScrollIndicator = {false} style = {{width: wp(100)}} className = "flex space-y-4" contentContainerStyle = {{alignItems: 'center', marginLeft: hp(1), marginRight: hp(1)}}>
+            <View className = "flex items-center mx-2 space-y-4">
+                <View className = "flex space-y-4 w-full" >
                     <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full ">
                         <TextInput placeholder='Email' placeholderTextColor={"gray"}  />
                     </Animated.View>
@@ -50,7 +49,7 @@ export default function Signup() {
                             <Text className = "text-sky-600">Login</Text>
                         </TouchableOpacity>
                     </Animated.View>
-                </KeyboardAwareScrollView>
+                </View>
             </View>
         </View>
     </View>   
