@@ -4,7 +4,7 @@ const client = require("../databases/redis");
 
 const getSources = async (req, res) => {
   const sources = await Sources.find();
-  return res.send(sources);
+  return res.status(200).send(sources);
 };
 
 const getFollowing = async (req, res) => {
@@ -23,10 +23,10 @@ const getFollowing = async (req, res) => {
       );
 
       const result = await client.hGet(userId.toString(), "following");
-      res.send(JSON.parse(result));
+      res.status(200).send(JSON.parse(result));
     }
   } catch (err) {
-    console.log(err);
+    res.status(500).send(err);
   }
 };
 
@@ -36,7 +36,7 @@ const follow = async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (!source) {
-    return res.status(400).json({ message: "Source is required" });
+    return res.status(400).send("Source is not found");
   }
 
   try {
@@ -47,9 +47,9 @@ const follow = async (req, res) => {
       "following",
       JSON.stringify(user.subscribed)
     );
-    res.sendStatus(200);
+    res.status(200).send("Source has been followed");
   } catch (err) {
-    console.log(err);
+    res.status(500).send(err);
   }
 };
 
@@ -58,20 +58,21 @@ const unfollow = async (req, res) => {
   const { sourceId } = req.body;
   const source = await Sources.findById(sourceId);
   const user = await User.findById(userId);
+  if (!source) {
+    return res.status(400).send("Source is not found");
+  }
   try {
     const index = user.subscribed.indexOf(source);
-    await user.subscribed.splice(index, 1);
+    user.subscribed.splice(index, 1);
     await user.save();
-    console.log(user.subscribed);
     await client.hSet(
       userId.toString(),
       "following",
       JSON.stringify(user.subscribed)
     );
-    res.sendStatus(202);
+    res.status(202).send("Unfollowed successfully");
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res.status(500).send(err);
   }
 };
 

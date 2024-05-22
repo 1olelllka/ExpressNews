@@ -9,12 +9,12 @@ const client = require("../../databases/redis");
 const routes = Router();
 
 routes.get("/profile", (req, res) => {
-  res.json({ user: req.user });
+  res.status(200).send(req.user);
 });
 
 routes.get("/searches", async (req, res) => {
   const searches = await client.hGet(req.user._id.toString(), "searches");
-  res.send(searches);
+  res.status(200).send(searches);
 });
 
 // Saved Articles

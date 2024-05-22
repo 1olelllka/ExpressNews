@@ -8,7 +8,7 @@ async function showSavedStories(req, res) {
     const cached = await client.hGet(userId.toString(), "stories");
     if (cached) {
       const result = await Story.find({ _id: { $in: JSON.parse(cached) } });
-      return res.send(result);
+      return res.status(200).send(result);
     } else {
       const dbUser = await User.findById(userId);
       const saved_stories = dbUser.saved_stories;
@@ -18,17 +18,20 @@ async function showSavedStories(req, res) {
         JSON.stringify(saved_stories)
       );
       const result = await Story.find({ _id: { $in: saved_stories } });
-      res.send(result);
+      res.status(200).send(result);
     }
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res.status(500).send(err);
   }
 }
 
 async function saveStory(req, res) {
   const userId = req.user._id;
   const { storyId } = req.body;
+  const story = await Story.findById(storyId);
+  if (!story) {
+    return res.status(404).send("Story not found");
+  }
   const user = await User.findById(userId);
   try {
     user.saved_stories.push(storyId);
@@ -39,16 +42,19 @@ async function saveStory(req, res) {
       "stories",
       JSON.stringify(user.saved_stories)
     );
-    res.sendStatus(200);
+    res.status(200).send("Story has been saved");
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res.status(500).send(err);
   }
 }
 
 async function deleteStory(req, res) {
   const userId = req.user._id;
   const { storyId } = req.body;
+  const story = await Story.findById(storyId);
+  if (!story) {
+    return res.status(404).send("Story not found");
+  }
   const user = await User.findById(userId);
   try {
     await user.saved_stories.pull(storyId);
@@ -58,10 +64,9 @@ async function deleteStory(req, res) {
       "stories",
       JSON.stringify(user.saved_stories)
     );
-    res.sendStatus(202);
+    res.status(202).send("Story has been deleted");
   } catch (err) {
-    console.log(err);
-    res.sendStatus(500);
+    res.status(500).send(err);
   }
 }
 

@@ -19,6 +19,7 @@ const RedisStore = require("connect-redis").default;
 // Databases
 const connectDB = require("./src/databases/database");
 const client = require("./src/databases/redis");
+const { httpLogger } = require("./src/logs/winston");
 
 connectDB();
 client
@@ -26,10 +27,12 @@ client
   .then(
     console.log("\x1b[41m%s\x1b[0m", "Cache ----> Connected to Redis <----")
   )
-  .catch(console.error);
+  .catch((err) => httpLogger.alert("Error connecting to Redis", err));
 
 // Middlewares
 const { authenticate } = require("./src/middlewares/authentication");
+const { responseInterceptor } = require("./src/logs/intercept");
+app.use(responseInterceptor);
 app.use((req, res, next) => {
   console.log(`${req.method}: ${req.url}`);
   next();
@@ -53,8 +56,9 @@ app.use(
 require("./src/middlewares/discordAuth");
 require("./src/middlewares/googleAuth");
 
-app.use(`${basicUrl}/home`, authenticate, require("./src/routes/mainPage"));
+// Routes
 app.use(`${basicUrl}/auth`, require("./src/routes/auth/auth"));
+app.use(`${basicUrl}/home`, authenticate, require("./src/routes/mainPage"));
 app.use(`${basicUrl}/user`, authenticate, require("./src/routes/user/user"));
 app.use(
   `${basicUrl}/feedback`,

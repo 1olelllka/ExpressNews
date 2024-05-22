@@ -5,7 +5,7 @@ const feedback = async (req, res) => {
   const { description, notify } = req.body;
 
   if (!description) {
-    return res.status(400).json({ message: "Description is required" });
+    return res.status(400).send("Description is required");
   }
   try {
     const feedback = new Feedback({
@@ -22,9 +22,9 @@ const feedback = async (req, res) => {
       });
     }
     await feedback.save();
-    res.sendStatus(201);
+    res.status(201).send("Feedback has been sent successfully");
   } catch (err) {
-    console.log(err);
+    res.status(500).send(err);
   }
 };
 

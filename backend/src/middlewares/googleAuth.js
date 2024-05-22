@@ -2,6 +2,8 @@ const passport = require("passport");
 const { Strategy } = require("passport-google-oauth20");
 const User = require("../databases/schemas/User");
 const jwt = require("jsonwebtoken");
+const { httpLogger } = require("../logs/winston");
+const { formatHttpLoggerResponse } = require("../logs/format");
 
 passport.serializeUser((user, done) => {
   console.log("Serializing User");
@@ -38,7 +40,11 @@ passport.use(
           const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
-          return done(null, user, { token: token, userId: user._id });
+          return done(null, user, {
+            token: token,
+            userId: user._id,
+            username: user.username,
+          });
         } else {
           const newUser = new User({
             googleId: googleId,
@@ -48,7 +54,6 @@ passport.use(
             image: profile._json.picture,
           });
           await newUser.save();
-          console.log("New Google Auth User: ", newUser.username);
           const token = jwt.sign(
             { userId: newUser._id },
             process.env.JWT_SECRET,
@@ -56,10 +61,14 @@ passport.use(
               expiresIn: "1h",
             }
           );
-          return done(null, newUser, { token: token, userId: newUser._id });
+          return done(null, newUser, {
+            token: token,
+            userId: newUser._id,
+            username: newUser.username,
+          });
         }
       } catch (err) {
-        console.log(err);
+        httpLogger.error("Google Auth Login Error", err);
         return done(err, null);
       }
     }

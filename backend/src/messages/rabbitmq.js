@@ -4,10 +4,12 @@ const Sources = require("../databases/schemas/sources");
 
 const io = require("./messages");
 const client = require("../databases/redis");
+const { httpLogger } = require("../logs/winston");
+const { redact } = require("../logs/redact");
 
 amqplib.connect(process.env.RABITMQ_URL, (error, connection) => {
   if (error) {
-    console.log(error);
+    httpLogger.alert("Error connecting to RabbitMQ", error);
   }
   console.log(
     "\x1b[41m%s\x1b[0m",
@@ -16,7 +18,7 @@ amqplib.connect(process.env.RABITMQ_URL, (error, connection) => {
   connection.createChannel((error, channel) => {
     // Breaking News
     if (error) {
-      console.log(error);
+      httpLogger.crit("Error creating a RabbitMQ Channel", error);
     }
     const queue = "breaking_news";
 
@@ -32,12 +34,15 @@ amqplib.connect(process.env.RABITMQ_URL, (error, connection) => {
       const user = await User.find({
         preferred_topics: { $in: source.category },
       });
-      console.log(user || "No user found");
+      if (user.length == 0) {
+        httpLogger.notice("RabbitMQ: No users found", user);
+      } else {
+        httpLogger.info("RabbitMQ: users found", redact(user));
+      }
       user.forEach(async (u) => {
         const exists = await client.json.type(
           u._id.toString() + "_breaking_news"
         );
-        console.log(exists);
         if (exists) {
           await client.json.arrAppend(
             u._id.toString() + "_breaking_news",

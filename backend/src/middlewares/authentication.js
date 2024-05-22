@@ -3,21 +3,24 @@ const User = require("../databases/schemas/User");
 const client = require("../databases/redis");
 
 const authenticate = async (req, res, next) => {
-  console.log(req.session);
   const token = req.session.token || req.headers.authorization?.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ message: "Authorization required" });
+    return res.status(401).send("Invalid token");
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
+      var decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(401).send("Invalid token");
+    }
     const user = await User.findById(decoded.userId);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).send(`User ${decoded.userId} not found`);
     }
 
     // TEMPORARILY DISABLED FOR DEBUGING PURPOSES
     // if (decoded.userId != req.session.userId) {
-    //   return res.status(401).json({ message: "Error, try again later" });
+    //   return res.status(403);
     // }
 
     req.user = user;
@@ -32,7 +35,7 @@ const authenticate = async (req, res, next) => {
     }
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(500).send(err);
   }
 };
 

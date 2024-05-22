@@ -1,6 +1,7 @@
 const Stories = require("../databases/schemas/Story");
 const client = require("../databases/redis");
 
+// In production change the limit !
 const getStories = async (req, res) => {
   try {
     var page = req.query.page;
@@ -17,7 +18,7 @@ const getStories = async (req, res) => {
     const stories = await Stories.find().limit(5).skip(startIndex);
     return res.send(stories);
   } catch (err) {
-    console.log(err);
+    res.status(500).send(err);
   }
 };
 
@@ -48,7 +49,7 @@ const getStoriesSearch = async (req, res) => {
     );
     res.send(stories);
   } catch (err) {
-    console.log(err);
+    res.status(500).send(err);
   }
 };
 
@@ -59,7 +60,7 @@ const getNotifications = async (req, res) => {
     );
     res.send(notifications.breaking);
   } catch (err) {
-    console.log(err);
+    res.status(500).send(err);
   }
 };
 

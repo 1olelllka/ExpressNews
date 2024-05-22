@@ -12,7 +12,7 @@ routes.get(
   "/discord",
   passport.authenticate("discord", { session: false }),
   (req, res) => {
-    res.sendStatus(200);
+    res.status(200);
   }
 );
 
@@ -23,9 +23,11 @@ routes.get(
     if (req.authInfo.token && req.authInfo.userId) {
       req.session.token = req.authInfo.token;
       req.session.userId = req.authInfo.userId;
-      res.sendStatus(201);
+      res
+        .status(200)
+        .send(`User ${req.authInfo.username} has logged through Discord`);
     } else {
-      res.sendStatus(401);
+      res.status(400).send("The user has failed to log with Discord");
     }
   }
 );
@@ -35,7 +37,7 @@ routes.get(
   "/google",
   passport.authenticate("google", { session: false }),
   (req, res) => {
-    res.sendStatus(200);
+    res.status(200);
   }
 );
 routes.get(
@@ -45,9 +47,11 @@ routes.get(
     if (req.authInfo.token && req.authInfo.userId) {
       req.session.token = req.authInfo.token;
       req.session.userId = req.authInfo.userId;
-      res.sendStatus(201);
+      res
+        .status(200)
+        .send(`User ${req.authInfo.username} has logged through Google`);
     } else {
-      res.sendStatus(401);
+      res.status(400).send("User has failed to log through Google");
     }
   }
 );
