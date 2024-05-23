@@ -25,7 +25,7 @@ routes.get(
       req.session.userId = req.authInfo.userId;
       res
         .status(200)
-        .send(`User ${req.authInfo.username} has logged through Discord`);
+        .send(`User ${req.authInfo.userId} has logged through Discord`);
     } else {
       res.status(400).send("The user has failed to log with Discord");
     }
@@ -49,7 +49,7 @@ routes.get(
       req.session.userId = req.authInfo.userId;
       res
         .status(200)
-        .send(`User ${req.authInfo.username} has logged through Google`);
+        .send(`User ${req.authInfo.userId} has logged through Google`);
     } else {
       res.status(400).send("User has failed to log through Google");
     }

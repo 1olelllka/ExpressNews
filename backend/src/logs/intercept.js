@@ -12,12 +12,12 @@ const responseInterceptor = (req, res, next) => {
         httpLogger.info("Success", formatHttpLoggerResponse(req, res, body));
       } else if (res.statusCode >= 400 && res.statusCode < 500) {
         httpLogger.warning(
-          body.message,
+          "Error on client side",
           formatHttpLoggerResponse(req, res, body)
         );
       } else {
         httpLogger.error(
-          body.message,
+          "Error on server side",
           formatHttpLoggerResponse(req, res, body)
         );
       }

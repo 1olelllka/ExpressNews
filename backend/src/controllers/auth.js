@@ -5,7 +5,7 @@ const User = require("../databases/schemas/User");
 const register = async (req, res, next) => {
   const { username, email, password, full_name } = req.body;
   if (!username || !email || !password || !full_name) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).send("All fields are required");
   }
   const existingUser = await User.findOne({ username });
   if (existingUser) {
@@ -20,7 +20,7 @@ const register = async (req, res, next) => {
       full_name,
     });
     await user.save();
-    res.status(201).send(`User ${username} has been registered`);
+    res.status(201).send(`User ${user._id} has been registered`);
   } catch (err) {
     res.status(500).send(err);
     next(err);
@@ -43,7 +43,7 @@ const login = async (req, res, next) => {
     });
     req.session.userId = user._id;
     req.session.token = token;
-    res.status(200).send(`User ${username} has logged in successfully`);
+    res.status(200).send(`User ${user._id} has logged in successfully`);
   } catch (err) {
     res.status(500).send(err);
     next(err);

@@ -43,7 +43,6 @@ passport.use(
           return done(null, user, {
             token: token,
             userId: user._id,
-            username: user.username,
           });
         } else {
           const newUser = new User({
@@ -63,7 +62,6 @@ passport.use(
           return done(null, newUser, {
             token: token,
             userId: newUser._id,
-            username: newUser.username,
           });
         }
       } catch (err) {
