@@ -14,10 +14,6 @@ const FeedbackModel = new Schema({
     type: Date,
     default: Date.now(),
   },
-  notify: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 const Feedback = mongoose.model("Feedback", FeedbackModel);
