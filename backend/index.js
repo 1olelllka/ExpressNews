@@ -32,7 +32,19 @@ client
 // Middlewares
 const { authenticate } = require("./src/middlewares/authentication");
 const { responseInterceptor } = require("./src/logs/intercept");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes -> During development
+  max: 1000,
+  message: "Too many requests from this IP, please try again after 15 minutes",
+  headers: true,
+});
 app.use(responseInterceptor);
+app.use(limiter);
+app.use(helmet());
+
 app.use((req, res, next) => {
   console.log(`${req.method}: ${req.url}`);
   next();

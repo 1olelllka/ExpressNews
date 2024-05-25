@@ -1,11 +1,13 @@
 const { Router } = require("express");
 const { register, login } = require("../../controllers/auth");
 const passport = require("passport");
+const registerValidate = require("../../middlewares/registerValidate");
+const loginValidate = require("../../middlewares/loginValidation");
 
 const routes = Router();
 
-routes.post("/register", register);
-routes.post("/login", login);
+routes.post("/register", registerValidate, register);
+routes.post("/login", loginValidate, login);
 
 // Discord Auth
 routes.get(

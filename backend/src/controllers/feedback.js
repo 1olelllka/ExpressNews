@@ -4,9 +4,6 @@ const { send } = require("../../nodemailer");
 const feedback = async (req, res) => {
   const { description } = req.body;
 
-  if (!description) {
-    return res.status(400).send("Description is required");
-  }
   try {
     const feedback = new Feedback({
       description: description,

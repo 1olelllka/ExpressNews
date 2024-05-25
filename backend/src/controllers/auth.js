@@ -4,9 +4,6 @@ const User = require("../databases/schemas/User");
 
 const register = async (req, res, next) => {
   const { username, email, password, full_name } = req.body;
-  if (!username || !email || !password || !full_name) {
-    return res.status(400).send("All fields are required");
-  }
   const existingUser = await User.findOne({ username });
   if (existingUser) {
     return res.status(409).send("User with the same username already exists");
