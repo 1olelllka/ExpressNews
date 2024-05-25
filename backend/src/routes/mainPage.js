@@ -3,11 +3,14 @@ const {
   getStories,
   getStoriesSearch,
   getNotifications,
+  getStoryDetail,
 } = require("../controllers/mainPage");
+const storyDetailValidate = require("../middlewares/storyDetailValidation");
 
 const routes = Router();
 
 routes.get("/", getStories);
+routes.get("/story/:id", storyDetailValidate, getStoryDetail);
 routes.get("/search", getStoriesSearch);
 routes.get("/notifications", getNotifications);
 

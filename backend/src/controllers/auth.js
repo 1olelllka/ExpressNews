@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../databases/schemas/User");
+const client = require("../databases/redis");
 
 const register = async (req, res, next) => {
   const { username, email, password, full_name } = req.body;
@@ -47,4 +48,15 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login };
+const logout = async (req, res, next) => {
+  console.log(req.sessionID);
+  await client.del("sess:" + req.sessionID.toString());
+  await client.del(req.session.userId.toString() + "_breaking_news");
+  await client.del(req.session.userId.toString());
+  req.session = null;
+  req.user = null;
+  res.status(200).send("User has logged out successfully");
+  next();
+};
+
+module.exports = { register, login, logout };

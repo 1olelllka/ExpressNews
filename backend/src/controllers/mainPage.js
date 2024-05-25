@@ -22,6 +22,15 @@ const getStories = async (req, res) => {
   }
 };
 
+const getStoryDetail = async (req, res) => {
+  try {
+    const story = await Stories.findById(req.params.id);
+    res.status(200).send(story);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
+
 const getStoriesSearch = async (req, res) => {
   try {
     var page = req.query.page;
@@ -64,4 +73,9 @@ const getNotifications = async (req, res) => {
   }
 };
 
-module.exports = { getStories, getStoriesSearch, getNotifications };
+module.exports = {
+  getStories,
+  getStoriesSearch,
+  getNotifications,
+  getStoryDetail,
+};
