@@ -14,6 +14,7 @@ module.exports = { io }; // for messages
 
 // Sessions Middleware
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const RedisStore = require("connect-redis").default;
 
 // Databases
@@ -65,6 +66,7 @@ app.use(
     }),
   })
 );
+app.use(cookieParser());
 require("./src/middlewares/discordAuth");
 require("./src/middlewares/googleAuth");
 

@@ -5,7 +5,7 @@ const {
   getNotifications,
   getStoryDetail,
 } = require("../controllers/mainPage");
-const storyDetailValidate = require("../middlewares/storyDetailValidation");
+const storyDetailValidate = require("../validators/storyDetailValidation");
 
 const routes = Router();
 

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { feedback } = require("../../controllers/feedback");
-const feedbackValidate = require("../../middlewares/feedbackValidator");
+const feedbackValidate = require("../../validators/feedbackValidator");
 
 const routes = Router();
 

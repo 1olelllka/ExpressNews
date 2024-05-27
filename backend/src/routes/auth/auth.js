@@ -1,13 +1,27 @@
 const { Router } = require("express");
 const { register, login, logout } = require("../../controllers/auth");
 const passport = require("passport");
-const registerValidate = require("../../middlewares/registerValidate");
-const loginValidate = require("../../middlewares/loginValidation");
+const registerValidate = require("../../validators/registerValidate");
+const loginValidate = require("../../validators/loginValidation");
+
+const { doubleCsrf } = require("csrf-csrf");
+const {
+  generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token.
+  doubleCsrfProtection, // This is the default CSRF protection middleware.
+} = doubleCsrf({
+  getSecret: () => "secret",
+  getTokenFromRequest: (req) => req.cookies.csrf,
+});
 
 const routes = Router();
 
-routes.post("/register", registerValidate, register);
-routes.post("/login", loginValidate, login);
+routes.get("/csrf", async (req, res) => {
+  const token = generateToken(req, res);
+  req.csrfToken = token;
+  res.status(200).json({ token });
+});
+routes.post("/register", doubleCsrfProtection, registerValidate, register);
+routes.post("/login", doubleCsrfProtection, loginValidate, login);
 
 routes.get("/logout", logout);
 
