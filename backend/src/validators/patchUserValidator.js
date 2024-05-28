@@ -1,14 +1,17 @@
 const { body, validationResult } = require("express-validator");
 
-const registerValidate = [
+const patchUserValidate = [
   body("username")
+    .if(body("username").exists())
     .isLength({ min: 4 })
-    .withMessage("Full name must be at least 2 characters long"),
-  body("email").isEmail().withMessage("Invalid email").normalizeEmail(),
-  body("password")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 6 characters long"),
+    .withMessage("Username must be at least 4 characters long"),
+  body("email")
+    .if(body("email").exists())
+    .isEmail()
+    .withMessage("Invalid email")
+    .normalizeEmail(),
   body("full_name")
+    .if(body("full_name").exists())
     .isLength({ min: 5 })
     .withMessage("Full name must be at least 5 characters long"),
 
@@ -21,4 +24,4 @@ const registerValidate = [
   },
 ];
 
-module.exports = registerValidate;
+module.exports = patchUserValidate;

@@ -6,11 +6,31 @@ const {
 } = require("../../controllers/savedArticles");
 const client = require("../../databases/redis");
 const User = require("../../databases/schemas/User");
+const patchUserValidate = require("../../validators/patchUserValidator");
 
 const routes = Router();
 
 routes.get("/profile", (req, res) => {
   res.status(200).send(req.user);
+});
+
+routes.patch("/profile", patchUserValidate, async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["username", "email", "full_name"];
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: "Invalid updates!" });
+  }
+  try {
+    updates.forEach((update) => (req.user[update] = req.body[update]));
+    await req.user.save();
+    res.send(req.user);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 });
 
 routes.delete("/delete-account", async (req, res) => {
