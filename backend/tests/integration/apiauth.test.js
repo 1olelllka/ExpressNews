@@ -5,12 +5,15 @@ const request = supertest(app);
 const mongoose = require("mongoose");
 const client = require("../../src/databases/redis");
 
+jest.mock("../../src/databases/redis");
+jest.mock("mongoose");
+
+mongoose.connect = jest.fn();
+client.connect = jest.fn();
+
 // Just simple status checks
 describe("Discord Authentication API Endpoints", () => {
   afterAll(async () => {
-    await client.disconnect();
-    await mongoose.disconnect();
-    await mongoose.connection.close();
     await app.stopServer();
   });
 

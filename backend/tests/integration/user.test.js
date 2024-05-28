@@ -9,6 +9,9 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 jest.mock("jsonwebtoken");
+jest.mock("../../src/databases/redis");
+
+client.connect = jest.fn();
 
 const user_data = {
   username: "test",
@@ -25,8 +28,6 @@ describe("User Endpoints", () => {
     jwt.verify = mockVerify;
   });
   afterAll(async () => {
-    await client.flushAll();
-    await client.disconnect();
     await User.deleteMany({ username: "test" });
     await mongoose.disconnect();
     await mongoose.connection.close();

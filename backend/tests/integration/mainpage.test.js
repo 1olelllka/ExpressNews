@@ -17,15 +17,18 @@ const user_data = {
   email: "test",
 };
 
+let user;
+
 describe("Main Page API Endpoints", () => {
   beforeAll(async () => {
     await mongoose.connect(process.env.DATABASE_URL);
-    const user = await User.create(user_data);
+    user = await User.create(user_data);
     const mockVerify = jest.fn().mockReturnValue({ userId: user._id });
     jwt.verify = mockVerify;
   });
   afterAll(async () => {
-    await client.flushAll();
+    await client.del(user._id.toString());
+    await client.json.del(user._id.toString() + "_breaking_news");
     await client.disconnect();
     await User.deleteOne(user_data);
     await mongoose.disconnect();

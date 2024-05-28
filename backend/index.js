@@ -21,12 +21,7 @@ const connectDB = require("./src/databases/database");
 const client = require("./src/databases/redis");
 
 connectDB();
-client
-  .connect()
-  .then(
-    console.log("\x1b[41m%s\x1b[0m", "Cache ----> Connected to Redis <----")
-  )
-  .catch(console.error);
+client.connect();
 
 // Middlewares
 const { authenticate } = require("./src/middlewares/authentication");

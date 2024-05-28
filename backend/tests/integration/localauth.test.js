@@ -8,6 +8,9 @@ const client = require("../../src/databases/redis");
 
 require("dotenv").config();
 
+jest.mock("../../src/databases/redis");
+client.connect = jest.fn();
+
 const user_data = {
   username: "test",
   password: "test",
@@ -23,8 +26,6 @@ describe("Local Authentication API Endpoints", () => {
     await User.deleteMany({ username: "test" });
   });
   afterAll(async () => {
-    await client.flushAll();
-    await client.disconnect();
     await mongoose.disconnect();
     await mongoose.connection.close();
     await app.stopServer();

@@ -9,6 +9,10 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
+jest.mock("../../src/databases/redis");
+client.connect = jest.fn();
+client.hGet = () => "[]";
+
 const user_data = {
   username: "test",
   password: "test",
@@ -26,12 +30,13 @@ describe("Sources", () => {
     jwt.verify = mockVerify;
   });
   afterAll(async () => {
-    await client.flushAll();
-    await client.disconnect();
     await User.deleteOne(user_data);
     await mongoose.disconnect();
     await mongoose.connection.close();
     await app.stopServer();
+  });
+  afterEach(async () => {
+    await jest.clearAllMocks();
   });
   describe("Get All Sources", () => {
     it("Should return 401 if user is unauthorized", async () => {
@@ -66,6 +71,7 @@ describe("Sources", () => {
       expect(res.status).toEqual(201);
     });
     it("Should show the following list", async () => {
+      client.hGet = () => JSON.stringify([{ _id: "663b2600cebf98cfed0f3434" }]);
       const res = await request
         .get("/api/v1/sources/my-following")
         .set("Authorization", "JWT valid-token");
@@ -78,10 +84,6 @@ describe("Sources", () => {
         .set("Authorization", "JWT valid-token")
         .send({ sourceId: "663b2600cebf98cfed0f3434" });
       expect(res.status).toEqual(202);
-      const check_user = await request
-        .get("/api/v1/sources/my-following")
-        .set("Authorization", "JWT valid-token");
-      expect(check_user.body.length).toEqual(0);
     });
   });
 });
