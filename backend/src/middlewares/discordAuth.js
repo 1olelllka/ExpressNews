@@ -2,6 +2,7 @@ const passport = require("passport");
 const { Strategy } = require("passport-discord");
 const User = require("../databases/schemas/User");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 passport.serializeUser((user, done) => {
   console.log("Serializing User");
@@ -21,6 +22,34 @@ passport.deserializeUser(async (id, done) => {
     done(err, null);
   }
 });
+
+async function discordVerify(accessToken, refreshToken, profile, done) {
+  const username = profile.username;
+  const email = profile.email;
+  try {
+    const user = await User.findOne({ discordId: profile.id });
+    if (user) {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+      return done(null, user, { token: token, userId: user._id });
+    } else {
+      const newUser = await User.create({
+        username,
+        email: email,
+        full_name: profile.username,
+        discordId: profile.id,
+      });
+      console.log("New User: ", newUser.username);
+      const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+      return done(null, newUser, { token: token, userId: newUser._id });
+    }
+  } catch (err) {
+    return done(err);
+  }
+}
 passport.use(
   new Strategy(
     {
@@ -29,39 +58,8 @@ passport.use(
       callbackURL: "http://localhost:8000/api/v1/auth/discord/redirect/",
       scope: ["identify", "email"],
     },
-    async (accessToken, refreshToken, profile, done) => {
-      const username = profile.username;
-      const email = profile.email;
-      try {
-        const user = await User.findOne({ discordId: profile.id });
-        if (user) {
-          const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-          });
-          return done(null, user, { token: token, userId: user._id });
-        } else {
-          const newUser = new User({
-            username,
-            email: email,
-            full_name: profile.username,
-            discordId: profile.id,
-          });
-          await newUser.save();
-          console.log("New User: ", newUser.username);
-          const token = jwt.sign(
-            { userId: newUser._id },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "1h",
-            }
-          );
-          return done(null, newUser, { token: token, userId: newUser._id });
-        }
-      } catch (err) {
-        return done(err);
-      }
-    }
+    discordVerify
   )
 );
 
-module.exports = passport;
+module.exports = { discordVerify };

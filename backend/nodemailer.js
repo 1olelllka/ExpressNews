@@ -16,7 +16,6 @@ const send = (data, callback) => {
   const transporter = nodemailer.createTransport(config);
   transporter.sendMail(data, (err, info) => {
     if (err) {
-      console.log(err);
       callback(err, null);
     } else {
       callback(null, info.response);

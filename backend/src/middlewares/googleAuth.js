@@ -2,6 +2,7 @@ const passport = require("passport");
 const { Strategy } = require("passport-google-oauth20");
 const User = require("../databases/schemas/User");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 passport.serializeUser((user, done) => {
   console.log("Serializing User");
@@ -22,6 +23,34 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+async function googleVerify(accessToken, refreshToken, profile, done) {
+  const googleId = profile._json.sub;
+  try {
+    const user = await User.findOne({ googleId: googleId });
+    if (user) {
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+      return done(null, user, { token: token, userId: user._id });
+    } else {
+      const newUser = await User.create({
+        googleId: googleId,
+        username: profile._json.name.replace(/\s+/g, ""),
+        email: profile._json.email,
+        full_name: profile._json.name,
+        image: profile._json.picture,
+      });
+      console.log("New Google Auth User: ", newUser.username);
+      const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+      return done(null, newUser, { token: token, userId: newUser._id });
+    }
+  } catch (err) {
+    console.log(err);
+    return done(err, null);
+  }
+}
 passport.use(
   new Strategy(
     {
@@ -30,38 +59,8 @@ passport.use(
       callbackURL: "http://localhost:8000/api/v1/auth/google/redirect/",
       scope: ["profile", "email"],
     },
-    async (accessToken, refreshToken, profile, done) => {
-      const googleId = profile._json.sub;
-      try {
-        const user = await User.findOne({ googleId: googleId });
-        if (user) {
-          const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-          });
-          return done(null, user, { token: token, userId: user._id });
-        } else {
-          const newUser = new User({
-            googleId: googleId,
-            username: profile._json.name.replace(/\s+/g, ""),
-            email: profile._json.email,
-            full_name: profile._json.name,
-            image: profile._json.picture,
-          });
-          await newUser.save();
-          console.log("New Google Auth User: ", newUser.username);
-          const token = jwt.sign(
-            { userId: newUser._id },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "1h",
-            }
-          );
-          return done(null, newUser, { token: token, userId: newUser._id });
-        }
-      } catch (err) {
-        console.log(err);
-        return done(err, null);
-      }
-    }
+    googleVerify
   )
 );
+
+module.exports = { googleVerify };
