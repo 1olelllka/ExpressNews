@@ -1,6 +1,8 @@
 const express = require("express");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
+const https = require("node:https");
+const fs = require("fs");
 // Config
 require("dotenv").config();
 const app = express();
@@ -8,7 +10,13 @@ const PORT = process.env.PORT;
 const basicUrl = process.env.BASIC_URL;
 
 // Server and Socket.io
-const server = createServer(app);
+const server = https.createServer(
+  {
+    key: fs.readFileSync(process.env.CERTIFICATE_SECRET_PATH),
+    cert: fs.readFileSync(process.env.CERTIFICATE_PATH),
+  },
+  app
+);
 const io = new Server(server);
 module.exports = { io }; // for messages
 
@@ -102,5 +110,5 @@ require("./src/messages/rabbitmq");
 
 // Server
 server.listen(PORT, () => {
-  console.log(`The server is running on http://localhost:${PORT}/`);
+  console.log(`The server is running on https://localhost:${PORT}/`);
 });

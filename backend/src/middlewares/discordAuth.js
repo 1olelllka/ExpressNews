@@ -28,7 +28,7 @@ passport.use(
     {
       clientID: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
-      callbackURL: "http://localhost:8000/api/v1/auth/discord/redirect/",
+      callbackURL: "https://localhost:8000/api/v1/auth/discord/redirect/",
       scope: ["identify", "email"],
     },
     async (accessToken, refreshToken, profile, done) => {
