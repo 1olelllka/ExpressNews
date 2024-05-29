@@ -25,6 +25,9 @@ const getStories = async (req, res) => {
 const getStoryDetail = async (req, res) => {
   try {
     const story = await Stories.findById(req.params.id);
+    if (!story) {
+      return res.status(404).send("Story not found");
+    }
     res.status(200).send(story);
   } catch (err) {
     res.status(500).send(err);
@@ -56,7 +59,7 @@ const getStoriesSearch = async (req, res) => {
       "searches",
       JSON.stringify(searches)
     );
-    res.send(stories);
+    res.status(200).send(stories);
   } catch (err) {
     res.status(500).send(err);
   }

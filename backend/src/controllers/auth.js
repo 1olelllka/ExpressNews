@@ -34,7 +34,7 @@ const login = async (req, res, next) => {
     }
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
-      return res.status(401).send(`User ${username} wrote wrong password`);
+      return res.status(400).send(`User ${username} wrote wrong password`);
     }
     const token = jwt.sign(
       { userId: user._id, username: user.username },

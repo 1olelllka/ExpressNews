@@ -12,6 +12,12 @@ const server = createServer(app);
 const io = new Server(server);
 module.exports = { io }; // for messages
 
+// Documentation
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+const options = require("./documentation/options");
+const specs = swaggerJsdoc(options);
+
 // Sessions Middleware
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
@@ -83,6 +89,11 @@ app.use(
   `${basicUrl}/sources`,
   authenticate,
   require("./src/routes/user/sources")
+);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
 );
 
 // RabbitMQ + Socket.IO

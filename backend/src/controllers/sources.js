@@ -36,7 +36,7 @@ const follow = async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (!source) {
-    return res.status(400).send("Source is not found");
+    return res.status(404).send("Source is not found");
   }
 
   try {
