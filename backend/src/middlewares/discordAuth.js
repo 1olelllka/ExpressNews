@@ -37,11 +37,23 @@ passport.use(
       try {
         const user = await User.findOne({ discordId: profile.id });
         if (user) {
-          const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-          });
+          const token = jwt.sign(
+            { userId: user._id, username: user.username },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "1h",
+            }
+          );
+          const refreshToken = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_REFRESH_SECRET,
+            {
+              expiresIn: "1d",
+            }
+          );
           return done(null, user, {
             token: token,
+            refreshToken: refreshToken,
             userId: user._id,
           });
         } else {
@@ -53,14 +65,22 @@ passport.use(
           });
           await newUser.save();
           const token = jwt.sign(
-            { userId: newUser._id },
+            { userId: newUser._id, username: newUser.username },
             process.env.JWT_SECRET,
             {
               expiresIn: "1h",
             }
           );
+          const refreshToken = jwt.sign(
+            { userId: newUser._id },
+            process.env.JWT_REFRESH_SECRET,
+            {
+              expiresIn: "1d",
+            }
+          );
           return done(null, newUser, {
             token: token,
+            refreshToken: refreshToken,
             userId: newUser._id,
           });
         }

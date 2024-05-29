@@ -36,8 +36,25 @@ const login = async (req, res, next) => {
     if (!passwordMatched) {
       return res.status(401).send(`User ${username} wrote wrong password`);
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    const token = jwt.sign(
+      { userId: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+    const refreshToken = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
     req.session.userId = user._id;
     req.session.token = token;

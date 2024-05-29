@@ -41,6 +41,12 @@ routes.get(
     if (req.authInfo.token && req.authInfo.userId) {
       req.session.token = req.authInfo.token;
       req.session.userId = req.authInfo.userId;
+      res.cookie("jwt", req.authInfo.refreshToken, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
       res
         .status(200)
         .send(`User ${req.authInfo.userId} has logged through Discord`);
@@ -65,6 +71,12 @@ routes.get(
     if (req.authInfo.token && req.authInfo.userId) {
       req.session.token = req.authInfo.token;
       req.session.userId = req.authInfo.userId;
+      res.cookie("jwt", req.authInfo.refreshToken, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
       res
         .status(200)
         .send(`User ${req.authInfo.userId} has logged through Google`);
