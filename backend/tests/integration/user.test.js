@@ -6,12 +6,15 @@ const mongoose = require("mongoose");
 const User = require("../../src/databases/schemas/User");
 const client = require("../../src/databases/redis");
 const jwt = require("jsonwebtoken");
+const amqplib = require("amqplib/callback_api");
 
 require("dotenv").config();
 jest.mock("jsonwebtoken");
 jest.mock("../../src/databases/redis");
+jest.mock("amqplib/callback_api");
 
 client.connect = jest.fn();
+amqplib.connect = jest.fn();
 
 const user_data = {
   username: "test",

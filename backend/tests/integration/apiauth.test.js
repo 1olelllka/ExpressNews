@@ -4,12 +4,16 @@ const request = supertest(app);
 
 const mongoose = require("mongoose");
 const client = require("../../src/databases/redis");
+const amqplib = require("amqplib/callback_api");
 
 jest.mock("../../src/databases/redis");
 jest.mock("mongoose");
+jest.mock("amqplib/callback_api");
 
 mongoose.connect = jest.fn();
 client.connect = jest.fn();
+
+amqplib.connect = jest.fn();
 
 // Just simple status checks
 describe("Discord Authentication API Endpoints", () => {
