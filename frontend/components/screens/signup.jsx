@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView} from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
@@ -9,6 +9,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 export default function Signup() {
     const navigation = useNavigation();
   return (
+
+    <KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={Platform.select({ios: -hp(20), android: -hp(38)})} style = {{flex: 1}}>
     <View className = "bg-white h-full w-full">
         <StatusBar style = "light" />
         <Image className = "h-full w-full absolute" source={require('../../assets/images/login/background.png')} />
@@ -28,7 +30,7 @@ export default function Signup() {
 
             {/* Form */}
             <View className = "flex items-center mx-2 space-y-4">
-                <View className = "flex space-y-4 w-full" >
+                <View className = "flex space-y-3 w-full" >
                     <Animated.View entering={FadeInDown.duration(1000).springify()} className = "bg-black/5 p-5 rounded-2xl w-full ">
                         <TextInput placeholder='Email' placeholderTextColor={"gray"}  />
                     </Animated.View>
@@ -53,5 +55,6 @@ export default function Signup() {
             </View>
         </View>
     </View>   
+    </KeyboardAvoidingView>
   )
 }
