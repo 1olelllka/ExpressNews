@@ -12,13 +12,13 @@ const config = {
   },
 };
 
-const send = (data) => {
+const send = (data, callback) => {
   const transporter = nodemailer.createTransport(config);
   transporter.sendMail(data, (err, info) => {
     if (err) {
-      console.log(err);
+      callback(err, null);
     } else {
-      return info.response;
+      callback(null, info.response);
     }
   });
 };

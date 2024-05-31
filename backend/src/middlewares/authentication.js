@@ -3,6 +3,7 @@ const User = require("../databases/schemas/User");
 const client = require("../databases/redis");
 
 const authenticate = async (req, res, next) => {
+  // console.log(req.session);
   const token = req.session.token || req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.status(401).send("Invalid token");
@@ -64,7 +65,6 @@ const authenticate = async (req, res, next) => {
     // if (decoded.userId != req.session.userId) {
     //   return res.status(403);
     // }
-
     req.user = user;
     const exists = await client.json.type(
       req.user._id.toString() + "_breaking_news"

@@ -39,9 +39,6 @@ const { httpLogger } = require("./src/logs/winston");
 connectDB();
 client
   .connect()
-  .then(
-    console.log("\x1b[41m%s\x1b[0m", "Cache ----> Connected to Redis <----")
-  )
   .catch((err) => httpLogger.alert("Error connecting to Redis", err));
 
 // Middlewares
@@ -106,9 +103,17 @@ app.use(
 
 // RabbitMQ + Socket.IO
 require("./src/messages/messages");
-require("./src/messages/rabbitmq");
+const { rabbitMQ } = require("./src/messages/rabbitmq");
+
+rabbitMQ(io);
 
 // Server
 server.listen(PORT, () => {
   console.log(`The server is running on https://localhost:${PORT}/`);
 });
+
+app.stopServer = () => {
+  server.close();
+};
+
+module.exports = app;
