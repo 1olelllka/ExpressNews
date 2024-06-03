@@ -1,6 +1,5 @@
 const amqplib = require("amqplib/callback_api");
-const { rabbitMQ } = require("../../src/messages/rabbitmq");
-const { httpLogger } = require("../../src/logs/winston");
+const { rabbitMQ } = require("../src/messages/rabbitmq");
 
 describe("RabbitMQ Unit Test", () => {
   it("Should call RabbitMQ and establish simple connection", async () => {
