@@ -1,7 +1,11 @@
+
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AppNavigation from './components/appNavigation';
+
 
 const socket = io("http://localhost:8000/", {
   auth: { userId: "663f3be20fc92fb910ff3567" }, // Needs to be changed
@@ -39,23 +43,17 @@ export default function App() {
     </View>
   );
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={news}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id} // Replace with unique identifier for each news item
-      />
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <SafeAreaProvider>
+      <AppNavigation />
+    </SafeAreaProvider>
+  )
+    // <View>
+    //   <FlatList
+    //     data={news}
+    //     renderItem={renderItem}
+    //     keyExtractor={(item) => item.id} // Replace with unique identifier for each news item
+    //   />
+    //   <Text>Open up App.js to start working on your app!</Text>
+    //   <StatusBar style="auto" />
+    // </View>
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
