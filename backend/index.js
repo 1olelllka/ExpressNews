@@ -2,6 +2,7 @@ const express = require("express");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const https = require("node:https");
+const http = require("node:http");
 const fs = require("fs");
 // Config
 require("dotenv").config();
@@ -10,13 +11,14 @@ const PORT = process.env.PORT;
 const basicUrl = process.env.BASIC_URL;
 
 // Server and Socket.io
-const server = https.createServer(
-  {
-    key: fs.readFileSync(process.env.CERTIFICATE_SECRET_PATH),
-    cert: fs.readFileSync(process.env.CERTIFICATE_PATH),
-  },
-  app
-);
+// const server = https.createServer(
+//   {
+//     key: fs.readFileSync(process.env.CERTIFICATE_SECRET_PATH),
+//     cert: fs.readFileSync(process.env.CERTIFICATE_PATH),
+//   },
+//   app
+// );
+const server = http.createServer(app);
 const io = new Server(server);
 module.exports = { io }; // for messages
 

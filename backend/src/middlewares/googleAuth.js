@@ -87,7 +87,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://localhost:8000/api/v1/auth/google/redirect/",
+      callbackURL: "http://localhost:8000/api/v1/auth/google/redirect/",
       scope: ["profile", "email"],
     },
     googleVerify
