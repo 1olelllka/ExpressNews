@@ -3,6 +3,7 @@ const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const https = require("node:https");
 const http = require("node:http");
+const cors = require("cors");
 const fs = require("fs");
 // Config
 require("dotenv").config();
@@ -58,6 +59,7 @@ const limiter = rateLimit({
 app.use(responseInterceptor);
 app.use(limiter);
 app.use(helmet());
+app.use(cors());
 
 app.use((req, res, next) => {
   console.log(`${req.method}: ${req.url}`);
