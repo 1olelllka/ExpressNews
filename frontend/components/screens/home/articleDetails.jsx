@@ -14,10 +14,11 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 
-export default function ArticleDetails() {
+export default function ArticleDetails({ navigation, route }) {
   const [thumbsUpPressed, setThumbsUpPressed] = useState(false);
   const [thumbsDownPressed, setThumbsDownPressed] = useState(false);
   const [article, setArticle] = useState({});
+  console.log("MY ROUTE", route);
   const changeThumbsUpPressed = () => {
     setThumbsUpPressed(!thumbsUpPressed);
     setThumbsDownPressed(false);
@@ -27,13 +28,16 @@ export default function ArticleDetails() {
     setThumbsUpPressed(false);
   };
   useEffect(() => {
-    fetch("http://localhost:8000/api/v1/home/story/66602dd0ffa57146372441bf", {
-      method: "GET",
-      headers: {
-        Authorization:
-          "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxNzU3ODI1NSwiZXhwIjoxNzE3NTgxODU1fQ.JIn5Ro7gqtGqcbpGm1n3be4EVKqwd6j1ez31EYi6Dx0",
-      },
-    })
+    fetch(
+      `http://localhost:8000/api/v1/home/story/${route.params.article._id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization:
+            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODAzNDMwOSwiZXhwIjoxNzE4MDM3OTA5fQ.HGRJqGNQ70Y4WTE62Sg__Nj3jIjNNYWJbUoidlY9dQc",
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -45,10 +49,10 @@ export default function ArticleDetails() {
   }, []);
   return (
     <SafeAreaView>
-      <ScrollView style={{ height: hp(100) }}>
+      <ScrollView>
         <View>
           <View className="flex mx-6 mt-2 flex-row items-center justify-between pb-3">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="close" size={30} color="black" />
             </TouchableOpacity>
             <Text className="text-neutral-500">{article.source?.name}</Text>
@@ -82,7 +86,7 @@ export default function ArticleDetails() {
                 source={{
                   uri: article.urlToImage,
                 }}
-                style={{ width: "100%", height: "50%" }}
+                style={{ height: hp(25), resizeMode: "contain" }}
               />
               <Text className="mt-2 text-neutral-500">
                 {article.description}
