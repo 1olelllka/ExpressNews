@@ -52,7 +52,6 @@ export default function Body() {
         <View className = "mt-5">
           <View className = "flex-row justify-between items-center">
             <Text className = "font-bold" style = {{fontSize: hp(3)}}>Top Stories</Text>
-              <Text className = "font-semibold" style = {{color: '#EE6D33', fontSize: hp(2)}} onPress={show2} >See all</Text>
           </View>
           <View className = "mt-4 mr-4 justify-center flex-col">
             <Carousel

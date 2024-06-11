@@ -3,7 +3,6 @@ import {
   Text,
   Image,
   ScrollView,
-  FlatList,
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -27,11 +26,11 @@ export default function ArticleDetails() {
     setThumbsUpPressed(false);
   };
   useEffect(() => {
-    fetch("http://localhost:8000/api/v1/home/story/66602dd0ffa57146372441bf", {
+    fetch("http://localhost:8000/api/v1/home/story/6661ff738ea5920f0d94c8c7", {
       method: "GET",
       headers: {
         Authorization:
-          "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxNzU3ODI1NSwiZXhwIjoxNzE3NTgxODU1fQ.JIn5Ro7gqtGqcbpGm1n3be4EVKqwd6j1ez31EYi6Dx0",
+          "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjYxZmQwMmE0ZTBmMjY4ZTc3ZjI0N2QiLCJ1c2VybmFtZSI6IlZsYWROb3Zvc2FkIiwiaWF0IjoxNzE3Njk4MjE0LCJleHAiOjE3MTc3MDE4MTR9.O0dSGFYIbV5oMm6s7jIYJ04bsCzW49OyRp0rIO4I6Ps",
       },
     })
       .then((response) => response.json())
@@ -45,7 +44,7 @@ export default function ArticleDetails() {
   }, []);
   return (
     <SafeAreaView>
-      <ScrollView style={{ height: hp(100) }}>
+      <ScrollView>
         <View>
           <View className="flex mx-6 mt-2 flex-row items-center justify-between pb-3">
             <TouchableOpacity>
@@ -82,14 +81,18 @@ export default function ArticleDetails() {
                 source={{
                   uri: article.urlToImage,
                 }}
-                style={{ width: "100%", height: "50%" }}
+                style={{ height: hp(25), resizeMode: 'contain'}}
               />
               <Text className="mt-2 text-neutral-500">
                 {article.description}
               </Text>
             </View>
             <View className="mt-4">
-              <Text className="text-base">{article.content}</Text>
+              <Text className="text-base">{article.content}
+                Incididunt tempor nulla ut irure amet velit nostrud id mollit non in sint non excepteur. Pariatur pariatur cupidatat ex id tempor officia consectetur ad excepteur cupidatat enim qui ullamco. Cillum amet voluptate do eiusmod.
+                Do nostrud reprehenderit anim id voluptate sint. Ipsum veniam fugiat tempor irure Lorem ullamco enim magna. Quis nulla veniam fugiat ullamco incididunt ad ipsum.
+                Reprehenderit sunt amet in fugiat sunt dolor nulla. Deserunt quis elit sit ad do. Non sint aliqua qui dolor minim laborum veniam fugiat ut reprehenderit elit et amet laboris. Deserunt voluptate sunt eiusmod fugiat in aliqua aliqua ad anim duis ullamco excepteur id.
+              </Text>
             </View>
           </View>
         </View>
