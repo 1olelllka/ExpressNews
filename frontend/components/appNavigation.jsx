@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 export default function AppNavigation() {
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName='Profile' screenOptions={{headerShown: false}}>
+        <Stack.Navigator initialRouteName='MyTabs' screenOptions={{headerShown: false}}>
             <Stack.Screen name="MyTabs" component={MyTabs}  />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Signup" component={Signup} /> 
