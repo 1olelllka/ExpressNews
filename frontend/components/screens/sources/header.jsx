@@ -10,7 +10,7 @@ export default function Header() {
     <View>
         <View className = "flex ml-5 mr-5 pt-4 pb-2 flex-row">
             <View className = "flex-1 justify-start flex-row items-center">
-                <Text style = {{fontSize: hp(3)}} className = "font-semibold">For You</Text>
+                <Text style = {{fontSize: hp(3)}} className = "font-semibold">Sources</Text>
             </View>
             <View className = "flex-1 flex-row justify-end items-center">
                 <Ionicons name="search" size={hp(4)} color="black" onPress={() => navigation.navigate('SearchScreen')} />

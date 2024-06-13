@@ -3,7 +3,6 @@ import {
   Text,
   Image,
   ScrollView,
-  FlatList,
   TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -93,7 +92,11 @@ export default function ArticleDetails({ navigation, route }) {
               </Text>
             </View>
             <View className="mt-4">
-              <Text className="text-base">{article.content}</Text>
+              <Text className="text-base">{article.content}
+                Incididunt tempor nulla ut irure amet velit nostrud id mollit non in sint non excepteur. Pariatur pariatur cupidatat ex id tempor officia consectetur ad excepteur cupidatat enim qui ullamco. Cillum amet voluptate do eiusmod.
+                Do nostrud reprehenderit anim id voluptate sint. Ipsum veniam fugiat tempor irure Lorem ullamco enim magna. Quis nulla veniam fugiat ullamco incididunt ad ipsum.
+                Reprehenderit sunt amet in fugiat sunt dolor nulla. Deserunt quis elit sit ad do. Non sint aliqua qui dolor minim laborum veniam fugiat ut reprehenderit elit et amet laboris. Deserunt voluptate sunt eiusmod fugiat in aliqua aliqua ad anim duis ullamco excepteur id.
+              </Text>
             </View>
           </View>
         </View>
