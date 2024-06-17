@@ -8,7 +8,9 @@ import SearchScreen from './screens/home/searchScreen';
 import SearchResult from './screens/home/searchResult';
 import ArticleDetails from './screens/home/articleDetails';
 import Saved from './screens/following/saved';
-import Profile from './screens/sources/profile';
+import ProfileSources from './screens/sources/profile';
+import Profile from './screens/home/profile';
+import SeeMore from './screens/sources/seeMore';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +25,9 @@ export default function AppNavigation() {
             <Stack.Screen name="SearchResult" component={SearchResult} />
             <Stack.Screen name = "ArticleDetails" component = {ArticleDetails} />
             <Stack.Screen name="Saved" component={Saved} />
+            <Stack.Screen name="ProfileSources" component={ProfileSources} />
             <Stack.Screen name="Profile" component={Profile} />
+            <Stack.Screen name = "SeeMore" component = {SeeMore} />
         </Stack.Navigator>
     </NavigationContainer>
   );

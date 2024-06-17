@@ -49,12 +49,13 @@ export default function SearchScreen() {
       <View className="mx-4">
         {/* Header */}
         <View className="flex flex-row">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign
             name="arrowleft"
             size={hp(3)}
             color="black"
-            onPress={() => navigation.goBack()}
           />
+          </TouchableOpacity>
           <TextInput
             className="flex-1 ml-3 border-b-2 border-neutral-600"
             placeholder="Search"

@@ -5,7 +5,7 @@ import { MaterialIcons, Entypo } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Profile() {
+export default function ProfileSources() {
     const navigation = useNavigation();
     const [button, setButton] = useState(false)
   return (

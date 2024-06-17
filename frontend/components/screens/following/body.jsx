@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native'
 import React from 'react'
 import { MaterialIcons } from '@expo/vector-icons';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -33,51 +33,22 @@ export default function Body() {
             <View>
                 <Text className = "font-semibold text-lg">Subscribed</Text>
             </View>
-            <TouchableOpacity>
-                <View className = "mt-4 flex-row items-center justify-between">
-                    <View className = " flex-row items-center space-x-2">
-                        <Image source = {require("../../../assets/images/image.png")} style = {{height: hp(5), width: hp(5)}} />
-                        <Text className = "text-lg">TechCrunch</Text>
-                    </View>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="gray" />
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <View className = "mt-4 flex-row items-center justify-between">
-                    <View className = " flex-row items-center space-x-2">
-                        <Image source = {require("../../../assets/images/image.png")} style = {{height: hp(5), width: hp(5)}} />
-                        <Text className = "text-lg">TechCrunch</Text>
-                    </View>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="gray" />
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <View className = "mt-4 flex-row items-center justify-between">
-                    <View className = " flex-row items-center space-x-2">
-                        <Image source = {require("../../../assets/images/image.png")} style = {{height: hp(5), width: hp(5)}} />
-                        <Text className = "text-lg">TechCrunch</Text>
-                    </View>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="gray" />
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <View className = "mt-4 flex-row items-center justify-between">
-                    <View className = " flex-row items-center space-x-2">
-                        <Image source = {require("../../../assets/images/image.png")} style = {{height: hp(5), width: hp(5)}} />
-                        <Text className = "text-lg">TechCrunch</Text>
-                    </View>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="gray" />
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <View className = "mt-4 flex-row items-center justify-between">
-                    <View className = " flex-row items-center space-x-2">
-                        <Image source = {require("../../../assets/images/image.png")} style = {{height: hp(5), width: hp(5)}} />
-                        <Text className = "text-lg">TechCrunch</Text>
-                    </View>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="gray" />
-                </View>
-            </TouchableOpacity>
+            <FlatList
+                style = {{height: hp(56)}} 
+                data = {[0,1,2,3,4,5,6,7,8,9,10]}
+                showsVerticalScrollIndicator = {false}
+                renderItem={() => (
+                    <TouchableOpacity>
+                        <View className = "flex-row items-center justify-between mt-4">
+                            <View className = "flex-row items-center space-x-2">
+                                <Image source = {require("../../../assets/images/image.png")} style = {{height: hp(5), width: hp(5)}} />
+                                <Text className = "text-lg">TechCrunch</Text>
+                            </View>
+                            <MaterialIcons name="keyboard-arrow-right" size={35} color="gray" />
+                        </View>
+                    </TouchableOpacity>
+                )}
+            />
         </View>
     </View>
   )
