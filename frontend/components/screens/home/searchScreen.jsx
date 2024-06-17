@@ -30,7 +30,7 @@ export default function SearchScreen() {
         method: "GET",
         headers: {
           Authorization:
-            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODAzNDMwOSwiZXhwIjoxNzE4MDM3OTA5fQ.HGRJqGNQ70Y4WTE62Sg__Nj3jIjNNYWJbUoidlY9dQc",
+            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODY1MjkxNiwiZXhwIjoxNzE4NjU2NTE2fQ.H6n60QSYWruNVN9Iasz8bDfrefsUiIgFrHoaXYdZH5E",
         },
       })
         .then((response) => response.json())
@@ -50,11 +50,7 @@ export default function SearchScreen() {
         {/* Header */}
         <View className="flex flex-row">
           <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign
-            name="arrowleft"
-            size={hp(3)}
-            color="black"
-          />
+            <AntDesign name="arrowleft" size={hp(3)} color="black" />
           </TouchableOpacity>
           <TextInput
             className="flex-1 ml-3 border-b-2 border-neutral-600"

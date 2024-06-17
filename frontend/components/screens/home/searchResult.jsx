@@ -6,6 +6,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { format } from "date-fns";
 
 export default function SearchResult({ navigation, route }) {
   const [search, setSearch] = React.useState([]);
@@ -17,7 +18,7 @@ export default function SearchResult({ navigation, route }) {
         method: "GET",
         headers: {
           Authorization:
-            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODAzNDMwOSwiZXhwIjoxNzE4MDM3OTA5fQ.HGRJqGNQ70Y4WTE62Sg__Nj3jIjNNYWJbUoidlY9dQc",
+            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODY1MjkxNiwiZXhwIjoxNzE4NjU2NTE2fQ.H6n60QSYWruNVN9Iasz8bDfrefsUiIgFrHoaXYdZH5E",
         },
       }
     )
@@ -26,6 +27,9 @@ export default function SearchResult({ navigation, route }) {
         setSearch(data);
       });
   }, []);
+  function formattedDate(date) {
+    return format(date, "dd/MM/yyyy H:mma");
+  }
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -84,7 +88,7 @@ export default function SearchResult({ navigation, route }) {
                     </View>
                     <View className="flex-row justify-between items-center mt-1">
                       <Text className="text-neutral-500 text-xs">
-                        {item.publishedAt}
+                        {formattedDate(item.publishedAt)}
                       </Text>
                       <Entypo
                         name="dots-three-horizontal"

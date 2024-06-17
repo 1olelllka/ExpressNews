@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -12,6 +6,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import { format } from "date-fns";
 
 export default function ArticleDetails({ navigation, route }) {
   const [thumbsUpPressed, setThumbsUpPressed] = useState(false);
@@ -33,7 +28,7 @@ export default function ArticleDetails({ navigation, route }) {
         method: "GET",
         headers: {
           Authorization:
-            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODAzNDMwOSwiZXhwIjoxNzE4MDM3OTA5fQ.HGRJqGNQ70Y4WTE62Sg__Nj3jIjNNYWJbUoidlY9dQc",
+            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODY1MjkxNiwiZXhwIjoxNzE4NjU2NTE2fQ.H6n60QSYWruNVN9Iasz8bDfrefsUiIgFrHoaXYdZH5E",
         },
       }
     )
@@ -46,6 +41,9 @@ export default function ArticleDetails({ navigation, route }) {
         console.log(err);
       });
   }, []);
+  function formattedDate(date) {
+    return format(date, "dd/MM/yyyy H:mma");
+  }
   return (
     <SafeAreaView>
       <ScrollView>
@@ -65,7 +63,7 @@ export default function ArticleDetails({ navigation, route }) {
           />
           <View
             className="m-4 rounded-md justify-center items-center"
-            style={{ borderWidth: 1, height: hp(3.5), width: wp(15) }}
+            style={{ borderWidth: 1, height: hp(3.5), width: wp(20) }}
           >
             <Text className="font-medium text-xs">
               {article.category?.toUpperCase()}
@@ -77,7 +75,9 @@ export default function ArticleDetails({ navigation, route }) {
               <Text>
                 By <Text className="font-semibold">{article.author}</Text>
               </Text>
-              <Text className="text-neutral-500">{article.publishedAt}</Text>
+              <Text className="text-neutral-500">
+                {formattedDate(article.publishedAt)}
+              </Text>
             </View>
             <View className="mt-4">
               <Image
@@ -92,10 +92,19 @@ export default function ArticleDetails({ navigation, route }) {
               </Text>
             </View>
             <View className="mt-4">
-              <Text className="text-base">{article.content}
-                Incididunt tempor nulla ut irure amet velit nostrud id mollit non in sint non excepteur. Pariatur pariatur cupidatat ex id tempor officia consectetur ad excepteur cupidatat enim qui ullamco. Cillum amet voluptate do eiusmod.
-                Do nostrud reprehenderit anim id voluptate sint. Ipsum veniam fugiat tempor irure Lorem ullamco enim magna. Quis nulla veniam fugiat ullamco incididunt ad ipsum.
-                Reprehenderit sunt amet in fugiat sunt dolor nulla. Deserunt quis elit sit ad do. Non sint aliqua qui dolor minim laborum veniam fugiat ut reprehenderit elit et amet laboris. Deserunt voluptate sunt eiusmod fugiat in aliqua aliqua ad anim duis ullamco excepteur id.
+              <Text className="text-base">
+                {article.content}
+                Incididunt tempor nulla ut irure amet velit nostrud id mollit
+                non in sint non excepteur. Pariatur pariatur cupidatat ex id
+                tempor officia consectetur ad excepteur cupidatat enim qui
+                ullamco. Cillum amet voluptate do eiusmod. Do nostrud
+                reprehenderit anim id voluptate sint. Ipsum veniam fugiat tempor
+                irure Lorem ullamco enim magna. Quis nulla veniam fugiat ullamco
+                incididunt ad ipsum. Reprehenderit sunt amet in fugiat sunt
+                dolor nulla. Deserunt quis elit sit ad do. Non sint aliqua qui
+                dolor minim laborum veniam fugiat ut reprehenderit elit et amet
+                laboris. Deserunt voluptate sunt eiusmod fugiat in aliqua aliqua
+                ad anim duis ullamco excepteur id.
               </Text>
             </View>
           </View>

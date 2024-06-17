@@ -15,6 +15,7 @@ import {
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { Entypo, FontAwesome6 } from "@expo/vector-icons";
 import Modal from "react-native-modal";
+import { format } from "date-fns";
 
 function getFormattedDate(date) {
   const day = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -33,7 +34,7 @@ export default function Body() {
       method: "GET",
       headers: {
         Authorization:
-          "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODAzNDMwOSwiZXhwIjoxNzE4MDM3OTA5fQ.HGRJqGNQ70Y4WTE62Sg__Nj3jIjNNYWJbUoidlY9dQc",
+          "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODY1MjkxNiwiZXhwIjoxNzE4NjU2NTE2fQ.H6n60QSYWruNVN9Iasz8bDfrefsUiIgFrHoaXYdZH5E",
       },
     })
       .then((response) => response.json())
@@ -55,6 +56,10 @@ export default function Body() {
       show2();
     }, 400);
   };
+
+  function formattedDate(date) {
+    return format(date, "dd/MM/yyyy H:mma");
+  }
   return (
     <View className="ml-4 mt-5 mr-4">
       <View>
@@ -200,7 +205,7 @@ export default function Body() {
                   </Text>
                   <View className="flex-row items-center justify-between mt-3 mr-2">
                     <Text className="text-neutral-500 font-medium">
-                      {item.publishedAt}
+                      {formattedDate(item.publishedAt)}
                     </Text>
                     <Entypo
                       name="dots-three-horizontal"
