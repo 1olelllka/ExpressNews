@@ -9,16 +9,9 @@ const getStories = async (req, res) => {
       page = 1;
     }
     const startIndex = (page - 1) * 5;
-    if (req.query.category) {
-      const stories = await Stories.find({ category: req.query.category })
-        .sort("-publishedAt")
-        .limit(5)
-        .skip(startIndex);
-      return res.send(stories);
-    }
     const stories = await Stories.find()
       .sort("-publishedAt")
-      .limit(5)
+      .limit(10)
       .skip(startIndex);
     return res.send(stories);
   } catch (err) {
@@ -55,7 +48,7 @@ const getStoriesSearch = async (req, res) => {
     const startIndex = (page - 1) * 5;
     const stories = await Stories.find({ $text: { $search: search } })
       .sort("-publishedAt")
-      .limit(5)
+      .limit(10)
       .skip(startIndex);
 
     searches.push(search);

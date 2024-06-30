@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -13,10 +15,11 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { Entypo, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { Entypo, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { format } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 function getFormattedDate(date) {
   const day = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -26,11 +29,30 @@ function getFormattedDate(date) {
   return `${day}, ${month} ${dayOfMonth}`;
 }
 
-export default function Body({ navigation }) {
+export default function Body() {
   const [activeDotIndex, setActiveDotIndex] = useState(0);
   const [popularArticles, setPopularArticles] = useState({});
   const [description, setDescription] = useState("");
   const [token, setToken] = useState("");
+  const [restStories, setRestStories] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+  const focused = useIsFocused();
+
+  const [buttonSave, setButtonSave] = React.useState(() => {
+    const initialState = {};
+    restStories.forEach((item) => {
+      initialState[item._id] = false;
+    });
+    return initialState;
+  });
+  const handleButtonPress = (id) => {
+    setButtonSave((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id], // Toggle the state for the specific button[item.id]
+    }));
+  };
 
   const tokenValue = async () => {
     const value = await AsyncStorage.getItem("userData");
@@ -44,6 +66,32 @@ export default function Body({ navigation }) {
       }
     }
   };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setButtonSave(false);
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  useEffect(() => {
+    if (focused) {
+      fetch("http://localhost:8000/api/v1/user/saved-articles", {
+        method: "GET",
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach((item) => {
+            setButtonSave((prevState) => ({
+              ...prevState,
+              [item._id]: true,
+            }));
+          });
+        });
+    }
+  }, [token, focused]);
 
   useEffect(() => {
     tokenValue();
@@ -59,6 +107,25 @@ export default function Body({ navigation }) {
       });
   }, [token]);
 
+  useEffect(() => {
+    tokenValue();
+    fetch(`http://localhost:8000/api/v1/home/?page=${page}`, {
+      method: "GET",
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setLoading(true);
+        if (page == 1) {
+          setRestStories(data.slice(5));
+        } else {
+          setRestStories((prevStories) => [...prevStories, ...data]);
+        }
+      });
+    setLoading(false);
+  }, [token, page]);
   const sendFeedback = (msg) => {
     fetch("http://localhost:8000/api/v1/feedback/", {
       method: "POST",
@@ -84,26 +151,47 @@ export default function Body({ navigation }) {
       }),
     });
   };
+  const unsave = (id) => {
+    fetch("http://localhost:8000/api/v1/user/delete-article", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `JWT ${token}`,
+      },
+      body: JSON.stringify({
+        storyId: id,
+      }),
+    });
+  };
+
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
 
   const _carousel = useRef();
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const show = () => setModalVisible(true);
-  const hide = () => setModalVisible(false);
-  const show2 = () => setModalVisible2(true);
-  const hide2 = () => setModalVisible2(false);
-  const ModalSwitch = () => {
-    hide();
-    setTimeout(() => {
-      show2();
-    }, 400);
-  };
-
   function formattedDate(date) {
     return format(date, "dd/MM/yyyy H:mma");
   }
   return (
-    <View className="ml-4 mt-5 mr-4">
+    <ScrollView
+      className="ml-4 mt-5 mr-4"
+      showsVerticalScrollIndicator={false}
+      onScroll={({ nativeEvent }) => {
+        if (isCloseToBottom(nativeEvent)) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      }}
+      scrollEventThrottle={1000}
+    >
       <View>
         <Text
           className="text-neutral-500 font-medium"
@@ -130,101 +218,13 @@ export default function Body({ navigation }) {
             onSnapToItem={(index) => setActiveDotIndex(index)}
             renderItem={({ item }) => {
               return (
-                <View className="">
-                  <Modal
-                    isVisible={modalVisible}
-                    onBackdropPress={hide}
-                    backdropOpacity={0.2}
-                    style={{ marginLeft: wp(20) }}
-                    animationIn={"fadeIn"}
-                    animationOut={"fadeOut"}
-                  >
-                    <View className="">
-                      <View
-                        className="flex self-center justify-center rounded-lg"
-                        style={{
-                          backgroundColor: "white",
-                          width: wp(60),
-                          height: hp(25),
-                        }}
-                      >
-                        <View className="self-center" style={{ width: wp(50) }}>
-                          <View className="border-b-2 pb-2 border-neutral-300">
-                            <TouchableOpacity
-                              onPress={() => saveArticle(item._id)}
-                            >
-                              <View className="flex-row items-center justify-between">
-                                <Text className="text-lg text-neutral-600 font-semibold">
-                                  Save article
-                                </Text>
-                                <FontAwesome6
-                                  name="bookmark"
-                                  size={24}
-                                  color="gray"
-                                />
-                              </View>
-                            </TouchableOpacity>
-                            <View
-                              className="flex-row items-center justify-between"
-                              style={{ marginTop: hp(1.5) }}
-                            >
-                              <Text className="text-lg text-neutral-600 font-semibold">
-                                Share article
-                              </Text>
-                              <FontAwesome6
-                                name="share-nodes"
-                                size={24}
-                                color="gray"
-                              />
-                            </View>
-                            <View
-                              className="flex-row items-center justify-between"
-                              style={{ marginTop: hp(1.5) }}
-                            >
-                              <Text className="text-lg text-neutral-600 font-semibold">
-                                Copy link
-                              </Text>
-                              <FontAwesome6
-                                name="copy"
-                                size={24}
-                                color="gray"
-                              />
-                            </View>
-                          </View>
-                          <View className="">
-                            <View
-                              className="flex-row items-center justify-between"
-                              style={{ marginTop: hp(0.5) }}
-                            >
-                              <Text className="text-lg text-neutral-600 font-semibold">
-                                Go to {item.link}
-                              </Text>
-                              <FontAwesome6
-                                name="arrow-right"
-                                size={24}
-                                color="gray"
-                              />
-                            </View>
-                            <TouchableOpacity onPress={ModalSwitch}>
-                              <View
-                                className="flex-row items-center justify-between"
-                                style={{ marginTop: hp(1.5) }}
-                              >
-                                <Text className="text-lg text-neutral-600 font-semibold">
-                                  Send a feedback
-                                </Text>
-                                <FontAwesome6
-                                  name="paper-plane"
-                                  size={24}
-                                  color="gray"
-                                />
-                              </View>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  </Modal>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ArticleDetails", {
+                      article: item,
+                    })
+                  }
+                >
                   <Image
                     source={{
                       uri: item.urlToImage
@@ -246,14 +246,40 @@ export default function Body({ navigation }) {
                     <Text className="text-neutral-500 font-medium">
                       {formattedDate(item.publishedAt)}
                     </Text>
-                    <Entypo
-                      name="dots-three-horizontal"
-                      size={24}
-                      color="gray"
-                      onPress={show}
-                    />
+                    <View className="flex-row space-x-4 space-evenly">
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (!buttonSave[item._id]) {
+                            saveArticle(item._id);
+                          } else {
+                            unsave(item._id);
+                          }
+                          handleButtonPress(item._id);
+                        }}
+                      >
+                        <MaterialIcons
+                          name={
+                            buttonSave[item._id]
+                              ? "bookmark"
+                              : "bookmark-outline"
+                          }
+                          size={30}
+                          color={buttonSave[item._id] ? "#EE6D33" : "gray"}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        className="mt-1 pb-1"
+                        onPress={() => setModalVisible(true)}
+                      >
+                        <FontAwesome6
+                          name="paper-plane"
+                          size={24}
+                          color="gray"
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             }}
           />
@@ -279,8 +305,8 @@ export default function Body({ navigation }) {
         </View>
       </View>
       <Modal
-        isVisible={modalVisible2}
-        onBackdropPress={hide2}
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible2(false)}
         backdropOpacity={0.2}
         style={{ margin: 0 }}
       >
@@ -301,7 +327,7 @@ export default function Body({ navigation }) {
                   name="xmark"
                   size={30}
                   color="black"
-                  onPress={hide2}
+                  onPress={() => setModalVisible(false)}
                 />
                 <Text className="font-semibold text-lg">Send feedback</Text>
                 <TouchableOpacity
@@ -327,6 +353,76 @@ export default function Body({ navigation }) {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+      <View className="mt-4 mb-10">
+        {restStories.map((item) => (
+          <TouchableOpacity
+            className="pb-1 border-neutral-400 mt-1"
+            style={{ borderBottomWidth: 1 }}
+            onPress={() =>
+              navigation.navigate("ArticleDetails", { article: item })
+            }
+          >
+            <View className="flex-row items-center justify-between">
+              <View style={{ width: wp(70) }}>
+                <Text className="text-neutral-600 text-xs font-semibold">
+                  {item?.source?.name}
+                </Text>
+                <Text className="font-bold text-base mt-2">{item.title}</Text>
+              </View>
+              <Image
+                className="rounded-md"
+                style={{
+                  width: wp(25),
+                  height: wp(25),
+                  resizeMode: "cover",
+                }}
+                source={{
+                  uri: item.urlToImage
+                    ? item.urlToImage
+                    : "https://shorturl.at/WoBew",
+                }}
+              />
+            </View>
+            <View className="flex-row justify-between items-center mt-2 pb-1">
+              <Text className="text-neutral-500 text-xs">
+                {item?.publishedAt && formattedDate(item.publishedAt)}
+              </Text>
+              <View className="flex-row space-x-4 space-evenly">
+                <TouchableOpacity
+                  onPress={() => {
+                    if (!buttonSave[item._id]) {
+                      saveArticle(item._id);
+                    } else {
+                      unsave(item._id);
+                    }
+                    handleButtonPress(item._id);
+                  }}
+                >
+                  <MaterialIcons
+                    name={
+                      buttonSave[item._id] ? "bookmark" : "bookmark-outline"
+                    }
+                    size={30}
+                    color={buttonSave[item._id] ? "#EE6D33" : "gray"}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  className="mt-1 pb-1"
+                  onPress={() => setModalVisible(true)}
+                >
+                  <FontAwesome6 name="paper-plane" size={24} color="gray" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+        {loading && (
+          <View className="row justify-center items-center mt-10 mb-10">
+            <ActivityIndicator size="large" color="#EE6D33" />
+            <Text className="mt-2 mb-2 text-neutral-700">Loading...</Text>
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 }

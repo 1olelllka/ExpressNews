@@ -6,6 +6,7 @@ import {
   ScrollView,
   TextInput,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -32,6 +33,8 @@ export default function SearchResult({ navigation, route }) {
   const [token, setToken] = useState("");
   const [description, setDescription] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
   const tokenValue = async () => {
     const value = await AsyncStorage.getItem("userData");
@@ -66,7 +69,7 @@ export default function SearchResult({ navigation, route }) {
   React.useEffect(() => {
     tokenValue();
     fetch(
-      `http://localhost:8000/api/v1/home/search/?query=${route.params.search}`,
+      `http://localhost:8000/api/v1/home/search/?query=${route.params.search}&page=${page}`,
       {
         method: "GET",
         headers: {
@@ -76,9 +79,11 @@ export default function SearchResult({ navigation, route }) {
     )
       .then((response) => response.json())
       .then((data) => {
-        setSearch(data);
+        setLoading(true);
+        setSearch((prevState) => [...prevState, ...data]);
       });
-  }, [token]);
+    setLoading(false);
+  }, [token, page]);
 
   React.useEffect(() => {
     fetch("http://localhost:8000/api/v1/user/saved-articles", {
@@ -132,6 +137,17 @@ export default function SearchResult({ navigation, route }) {
     });
   };
 
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
   function formattedDate(date) {
     return format(date, "dd/MM/yyyy H:mma");
   }
@@ -193,7 +209,15 @@ export default function SearchResult({ navigation, route }) {
           </KeyboardAvoidingView>
         </Modal>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            setPage((prevPage) => prevPage + 1);
+          }
+        }}
+        scrollEventThrottle={1000}
+      >
         <View className="m-4 flex-row items-center space-x-4">
           <TouchableOpacity
             onPress={() =>
@@ -288,6 +312,12 @@ export default function SearchResult({ navigation, route }) {
                 </View>
               </TouchableOpacity>
             ))}
+            {loading && (
+              <View className="row justify-center items-center mt-10 mb-10">
+                <ActivityIndicator size="large" color="#EE6D33" />
+                <Text className="mt-2 mb-2 text-neutral-700">Loading...</Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>

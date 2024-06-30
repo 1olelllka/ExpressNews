@@ -34,7 +34,7 @@ const googleLogin = async (req, res, next) => {
       { userId: newUser._id, username: newUser.username },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "4h",
       }
     );
     const refreshToken = jwt.sign(

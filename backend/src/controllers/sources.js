@@ -32,9 +32,15 @@ const getFollowing = async (req, res) => {
 };
 
 const getSourcesNews = async (req, res) => {
-  const sources = await Story.find({ "source.name": req.params.source }).limit(
-    50
-  );
+  var page = req.query.page;
+  if (!page) {
+    page = 1;
+  }
+  const startIndex = (page - 1) * 5;
+
+  const sources = await Story.find({ "source.name": req.params.source })
+    .limit(10)
+    .skip(startIndex);
   return res.status(200).send(sources);
 };
 

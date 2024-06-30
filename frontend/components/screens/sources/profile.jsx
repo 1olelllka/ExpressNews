@@ -6,6 +6,7 @@ import {
   FlatList,
   TextInput,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -28,6 +29,9 @@ export default function ProfileSources({ route }) {
   const [token, setToken] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [page, setPage] = useState(1);
 
   const tokenValue = async () => {
     const value = await AsyncStorage.getItem("userData");
@@ -42,7 +46,7 @@ export default function ProfileSources({ route }) {
   useEffect(() => {
     tokenValue();
     fetch(
-      `http://localhost:8000/api/v1/sources/sources-news/${route.params.source.name}`,
+      `http://localhost:8000/api/v1/sources/sources-news/${route.params.source.name}?page=${page}`,
       {
         method: "GET",
         headers: {
@@ -51,11 +55,15 @@ export default function ProfileSources({ route }) {
       }
     )
       .then((response) => response.json())
-      .then((data) =>
-        setNewsList(
-          data.filter((item) => item.source.name === route.params.source.name)
-        )
-      )
+      .then((data) => {
+        setLoading(true);
+        setNewsList((prev) => [
+          ...prev,
+          ...data.filter(
+            (item) => item.source.name === route.params.source.name
+          ),
+        ]);
+      })
       .then(
         fetch("http://localhost:8000/api/v1/sources/my-following", {
           method: "GET",
@@ -72,7 +80,8 @@ export default function ProfileSources({ route }) {
             });
           })
       );
-  }, [token]);
+    setLoading(false);
+  }, [token, page]);
 
   const follow = (sourceId) => {
     console.log(
@@ -306,10 +315,19 @@ export default function ProfileSources({ route }) {
         </View>
       </View>
       <View className="border-b-2 border-neutral-200 mt-4" />
-      <View className="mt-4 mx-4 space-y-2" style={{ paddingBottom: hp(25) }}>
+      <View className="mt-4 mx-4 space-y-2" style={{ paddingBottom: hp(50) }}>
         <FlatList
           data={newsList}
           showsVerticalScrollIndicator={false}
+          onEndReached={() => {
+            setPage((prevPage) => prevPage + 1);
+          }}
+          ListFooterComponent={() => (
+            <View className="row justify-center items-center mt-10 mb-10">
+              <ActivityIndicator size="large" color="#EE6D33" />
+              <Text className="mt-2 mb-2 text-neutral-700">Loading...</Text>
+            </View>
+          )}
           renderItem={({ item }) => (
             <View
               className="pb-1 border-neutral-400 mt-2"

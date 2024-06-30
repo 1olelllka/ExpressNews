@@ -5,16 +5,6 @@ const registerValidate = require("../../validators/registerValidate");
 const loginValidate = require("../../validators/loginValidation");
 const { googleLogin } = require("../../middlewares/googleAuth");
 const { authenticate } = require("../../middlewares/authentication");
-
-// const { doubleCsrf } = require("csrf-csrf");
-// const {
-//   generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token.
-//   doubleCsrfProtection, // This is the default CSRF protection middleware.
-// } = doubleCsrf({
-//   getSecret: () => "secret",
-//   getTokenFromRequest: (req) => req.cookies.csrf,
-// });
-
 const routes = Router();
 
 /**
@@ -182,7 +172,7 @@ routes.get(
 /**
  * @swagger
  * /auth/auth-google:
- *  get:
+ *  post:
  *    summary: Google login
  *    tags: [Login]
  *    responses:
@@ -195,10 +185,5 @@ routes.get(
  */
 
 routes.post("/auth-google", googleLogin);
-
-// WHEN DEBUG
-routes.get("/", (req, res) => {
-  res.send(req.session);
-});
 
 module.exports = routes;
