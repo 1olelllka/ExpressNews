@@ -9,7 +9,7 @@ from newsapi import NewsApiClient
 load_dotenv()
 
 newsapi = NewsApiClient(api_key=os.environ['NEWS_API_KEY'])
-connection_parameters = pika.ConnectionParameters(os.environ['RABBITMQ'])  # Replace with your hostname/IP if different
+connection_parameters = pika.ConnectionParameters('localhost')  # Replace with your hostname/IP if different
 class Scraping:
     def __init__(self):
         self.client = MongoClient(os.environ['DATABASE_URL'])
@@ -28,7 +28,7 @@ class Scraping:
     def breaking_news(self):
         connection = pika.BlockingConnection(connection_parameters)
         channel = connection.channel()
-
+        print(" [*] Waiting for messages. To exit press CTRL+C")
         channel.queue_declare(queue='breaking_news', durable=True)
         breaking_news = newsapi.get_top_headlines(language='en')
         print(len(breaking_news['articles']))
@@ -55,8 +55,8 @@ class Scraping:
 scraping = Scraping()
 
 # scraping.source_scraping()
-# scraping.breaking_news()
-scraping.news_scraping()
+scraping.breaking_news()
+# scraping.news_scraping()
 
 # -----------------------------------------------------------------------------
 # Will be done later

@@ -4,6 +4,7 @@ const {
   follow,
   unfollow,
   getFollowing,
+  getSourcesNews,
 } = require("../../controllers/sources");
 
 const routes = Router();
@@ -23,6 +24,22 @@ const routes = Router();
  * /sources:
  *  get:
  *    summary: Get all sources
+ *    description: This can only be done by authenticated users
+ *    tags: [Sources]
+ *    responses:
+ *      200:
+ *        description: Success
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal server error
+ */
+/** @swagger
+ * /sources/sources-news/:source
+ *  get:
+ *    summary: Get all news filtered by sources
  *    description: This can only be done by authenticated users
  *    tags: [Sources]
  *    responses:
@@ -106,6 +123,7 @@ const routes = Router();
  *        description: Internal server error
  */
 routes.get("/", getSources);
+routes.get("/sources-news/:source/", getSourcesNews);
 
 routes.get("/my-following", getFollowing);
 routes.post("/follow", follow);

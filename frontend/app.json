@@ -12,16 +12,27 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ExpressNews.frontend"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#ffffff",
+        "bundleIdentifier": "com.ExpressNews.frontend"
+      },
+      "package": "com.ExpressNews.frontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.497062203768-rjnoakqjrn9gc13gvj0lma0962p3rh5o"
+        }
+      ]
+    ]
   }
 }

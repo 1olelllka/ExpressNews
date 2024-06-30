@@ -35,7 +35,7 @@ async function discordVerify(accessToken, refreshToken, profile, done) {
         { userId: user._id, username: user.username },
         process.env.JWT_SECRET,
         {
-          expiresIn: "1h",
+          expiresIn: "3h",
         }
       );
       const refreshToken = jwt.sign(
@@ -61,7 +61,7 @@ async function discordVerify(accessToken, refreshToken, profile, done) {
         { userId: newUser._id, username: newUser.username },
         process.env.JWT_SECRET,
         {
-          expiresIn: "1h",
+          expiresIn: "3h",
         }
       );
       const refreshToken = jwt.sign(

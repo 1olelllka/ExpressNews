@@ -51,7 +51,7 @@ const helmet = require("helmet");
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes -> During development
-  max: 1000,
+  max: 10000000000,
   message: "Too many requests from this IP, please try again after 15 minutes",
   headers: true,
 });
@@ -111,7 +111,7 @@ rabbitMQ(io);
 
 // Server
 server.listen(PORT, () => {
-  console.log(`The server is running on https://localhost:${PORT}/`);
+  console.log(`The server is running on http://localhost:${PORT}/`);
 });
 
 app.stopServer = () => {

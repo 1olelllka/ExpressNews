@@ -1,6 +1,7 @@
 const Sources = require("../databases/schemas/sources");
 const User = require("../databases/schemas/User");
 const client = require("../databases/redis");
+const Story = require("../databases/schemas/Story");
 
 const getSources = async (req, res) => {
   const sources = await Sources.find();
@@ -28,6 +29,13 @@ const getFollowing = async (req, res) => {
   } catch (err) {
     res.status(500).send(err);
   }
+};
+
+const getSourcesNews = async (req, res) => {
+  const sources = await Story.find({ "source.name": req.params.source }).limit(
+    50
+  );
+  return res.status(200).send(sources);
 };
 
 const follow = async (req, res) => {
@@ -76,4 +84,4 @@ const unfollow = async (req, res) => {
   }
 };
 
-module.exports = { getSources, follow, getFollowing, unfollow };
+module.exports = { getSources, follow, getFollowing, unfollow, getSourcesNews };

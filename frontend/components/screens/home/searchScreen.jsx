@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   AntDesign,
@@ -17,20 +17,32 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SearchScreen() {
   const navigation = useNavigation();
   const focused = useIsFocused();
+  const [token, setToken] = useState("");
+
+  const tokenValue = async () => {
+    const value = await AsyncStorage.getItem("userData");
+    if (value !== null) {
+      const data = JSON.parse(value);
+      if (data.token && data.expiry > Date.now()) {
+        setToken(data.token);
+      }
+    }
+  };
 
   const [searches, setSearches] = React.useState([]);
 
   React.useEffect(() => {
+    tokenValue();
     if (focused) {
       fetch("http://localhost:8000/api/v1/user/searches", {
         method: "GET",
         headers: {
-          Authorization:
-            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODY1MjkxNiwiZXhwIjoxNzE4NjU2NTE2fQ.H6n60QSYWruNVN9Iasz8bDfrefsUiIgFrHoaXYdZH5E",
+          Authorization: `JWT ${token}`,
         },
       })
         .then((response) => response.json())
@@ -38,7 +50,7 @@ export default function SearchScreen() {
           setSearches(data);
         });
     }
-  }, [focused]);
+  }, [focused, token]);
 
   const search = (item) => {
     navigation.navigate("SearchResult", { search: item });

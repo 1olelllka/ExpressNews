@@ -4,7 +4,7 @@ const formatHttpLoggerResponse = (req, res, responseBody) => {
   return {
     request: {
       headers: req.headers,
-      host: req.headers.host,
+      host: req.headers?.host,
       baseUrl: req.baseUrl,
       url: req.url,
       method: req.method,

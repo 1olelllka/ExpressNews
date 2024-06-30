@@ -7,12 +7,23 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { format } from "date-fns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ArticleDetails({ navigation, route }) {
   const [thumbsUpPressed, setThumbsUpPressed] = useState(false);
   const [thumbsDownPressed, setThumbsDownPressed] = useState(false);
   const [article, setArticle] = useState({});
-  console.log("MY ROUTE", route);
+  const [token, setToken] = useState("");
+
+  const tokenValue = async () => {
+    const value = await AsyncStorage.getItem("userData");
+    if (value !== null) {
+      const data = JSON.parse(value);
+      if (data.token && data.expiry > Date.now()) {
+        setToken(data.token);
+      }
+    }
+  };
   const changeThumbsUpPressed = () => {
     setThumbsUpPressed(!thumbsUpPressed);
     setThumbsDownPressed(false);
@@ -22,13 +33,13 @@ export default function ArticleDetails({ navigation, route }) {
     setThumbsUpPressed(false);
   };
   useEffect(() => {
+    tokenValue();
     fetch(
       `http://localhost:8000/api/v1/home/story/${route.params.article._id}`,
       {
         method: "GET",
         headers: {
-          Authorization:
-            "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODY1MjkxNiwiZXhwIjoxNzE4NjU2NTE2fQ.H6n60QSYWruNVN9Iasz8bDfrefsUiIgFrHoaXYdZH5E",
+          Authorization: `JWT ${token}`,
         },
       }
     )
@@ -40,7 +51,7 @@ export default function ArticleDetails({ navigation, route }) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [token]);
   function formattedDate(date) {
     return format(date, "dd/MM/yyyy H:mma");
   }
@@ -73,10 +84,15 @@ export default function ArticleDetails({ navigation, route }) {
             <Text className="text-2xl font-bold">{article.title}</Text>
             <View className="mt-4 flex-row items-center justify-between">
               <Text>
-                By <Text className="font-semibold">{article.author}</Text>
+                By{" "}
+                <Text className="font-semibold">
+                  {article?.author?.slice(0, 20)}
+                </Text>
               </Text>
               <Text className="text-neutral-500">
-                {formattedDate(article.publishedAt)}
+                {article.publishedAt
+                  ? formattedDate(article.publishedAt)
+                  : null}
               </Text>
             </View>
             <View className="mt-4">

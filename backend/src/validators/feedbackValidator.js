@@ -1,7 +1,7 @@
 const { body, validationResult } = require("express-validator");
 
 const feedbackValidate = [
-  body("feedback").notEmpty().withMessage("Feedback is required"),
+  body("description").notEmpty().withMessage("Description is required"),
 
   (req, res, next) => {
     const errors = validationResult(req);

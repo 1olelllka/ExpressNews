@@ -32,6 +32,9 @@ const login = async (req, res, next) => {
     if (!user) {
       return res.status(404).send(`User ${username} not found`);
     }
+    if (!user.password) {
+      return res.status(400).send(`User ${username} doesn't have password`);
+    }
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched) {
       return res.status(400).send(`User ${username} wrote wrong password`);
@@ -58,7 +61,7 @@ const login = async (req, res, next) => {
     });
     req.session.userId = user._id;
     req.session.token = token;
-    res.status(200).send(`User ${user._id} has logged in successfully`);
+    res.status(200).send({ token: token });
   } catch (err) {
     res.status(500).send(err);
     next(err);
@@ -66,10 +69,8 @@ const login = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  console.log(req.sessionID);
-  await client.del("sess:" + req.sessionID.toString());
-  await client.del(req.session.userId.toString() + "_breaking_news");
-  await client.del(req.session.userId.toString());
+  await client.json.del(req.user._id.toString() + "_breaking_news");
+  await client.del(req.user._id.toString());
   req.session = null;
   req.user = null;
   res.status(200).send("User has logged out successfully");

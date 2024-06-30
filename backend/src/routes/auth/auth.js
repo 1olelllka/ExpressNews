@@ -3,15 +3,17 @@ const { register, login, logout } = require("../../controllers/auth");
 const passport = require("passport");
 const registerValidate = require("../../validators/registerValidate");
 const loginValidate = require("../../validators/loginValidation");
+const { googleLogin } = require("../../middlewares/googleAuth");
+const { authenticate } = require("../../middlewares/authentication");
 
-const { doubleCsrf } = require("csrf-csrf");
-const {
-  generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token.
-  doubleCsrfProtection, // This is the default CSRF protection middleware.
-} = doubleCsrf({
-  getSecret: () => "secret",
-  getTokenFromRequest: (req) => req.cookies.csrf,
-});
+// const { doubleCsrf } = require("csrf-csrf");
+// const {
+//   generateToken, // Use this in your routes to provide a CSRF hash + token cookie and token.
+//   doubleCsrfProtection, // This is the default CSRF protection middleware.
+// } = doubleCsrf({
+//   getSecret: () => "secret",
+//   getTokenFromRequest: (req) => req.cookies.csrf,
+// });
 
 const routes = Router();
 
@@ -99,8 +101,8 @@ routes.get("/csrf", async (req, res) => {
  *      500:
  *        description: Internal server error
  */
-routes.post("/register", doubleCsrfProtection, registerValidate, register);
-routes.post("/login", doubleCsrfProtection, loginValidate, login);
+routes.post("/register", registerValidate, register);
+routes.post("/login", loginValidate, login);
 
 /**
  * @swagger
@@ -115,7 +117,7 @@ routes.post("/login", doubleCsrfProtection, loginValidate, login);
  *      500:
  *        description: Internal server error
  */
-routes.get("/logout", logout);
+routes.get("/logout", authenticate, logout);
 
 // Discord Auth
 /**
@@ -179,62 +181,20 @@ routes.get(
 // Google Auth
 /**
  * @swagger
- * /auth/google:
+ * /auth/auth-google:
  *  get:
- *    summary: Redirect to Google login
- *    tags: [Login]
- *    responses:
- *      301:
- *        description: Redirected
- *      500:
- *        description: Internal server error
- */
-routes.get("/google", passport.authenticate("google", { session: false }));
-routes.get(
-  "/google",
-  passport.authenticate("google", { session: false }),
-  (req, res) => {
-    res.status(200);
-  }
-);
-
-/**
- * @swagger
- * /auth/google/redirect:
- *  get:
- *    summary: Login a user via Google
+ *    summary: Google login
  *    tags: [Login]
  *    responses:
  *      200:
  *        description: User has been logged
  *      201:
  *        description: User has been registered
- *      400:
- *        description: Bad request or wrong credentials
  *      500:
  *        description: Internal server error
  */
-routes.get(
-  "/google/redirect",
-  passport.authenticate("google", { session: false }),
-  (req, res) => {
-    if (req.authInfo.token && req.authInfo.userId) {
-      req.session.token = req.authInfo.token;
-      req.session.userId = req.authInfo.userId;
-      res.cookie("jwt", req.authInfo.refreshToken, {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-      res
-        .status(200)
-        .send(`User ${req.authInfo.userId} has logged through Google`);
-    } else {
-      res.status(400).send("User has failed to log through Google");
-    }
-  }
-);
+
+routes.post("/auth-google", googleLogin);
 
 // WHEN DEBUG
 routes.get("/", (req, res) => {

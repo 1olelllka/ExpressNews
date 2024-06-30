@@ -13,9 +13,10 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { Entypo, FontAwesome6 } from "@expo/vector-icons";
+import { Entypo, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { format } from "date-fns";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function getFormattedDate(date) {
   const day = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -25,23 +26,64 @@ function getFormattedDate(date) {
   return `${day}, ${month} ${dayOfMonth}`;
 }
 
-export default function Body() {
+export default function Body({ navigation }) {
   const [activeDotIndex, setActiveDotIndex] = useState(0);
   const [popularArticles, setPopularArticles] = useState({});
+  const [description, setDescription] = useState("");
+  const [token, setToken] = useState("");
+
+  const tokenValue = async () => {
+    const value = await AsyncStorage.getItem("userData");
+    if (value !== null) {
+      const data = JSON.parse(value);
+      if (data.token && data.expiry > Date.now()) {
+        setToken(data.token);
+      } else {
+        alert("Your session has been expired!");
+        navigation.navigate("Login");
+      }
+    }
+  };
 
   useEffect(() => {
+    tokenValue();
     fetch("http://localhost:8000/api/v1/home/", {
       method: "GET",
       headers: {
-        Authorization:
-          "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjU2MWFjZTQ1ZTZiZmMzZDY1ZTZmNzciLCJ1c2VybmFtZSI6IjFvbGVsbGxrYSIsImlhdCI6MTcxODY1MjkxNiwiZXhwIjoxNzE4NjU2NTE2fQ.H6n60QSYWruNVN9Iasz8bDfrefsUiIgFrHoaXYdZH5E",
+        Authorization: `JWT ${token}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        setPopularArticles(data);
+        setPopularArticles(data.slice(0, 5));
       });
-  }, []);
+  }, [token]);
+
+  const sendFeedback = (msg) => {
+    fetch("http://localhost:8000/api/v1/feedback/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `JWT ${token}`,
+      },
+      body: JSON.stringify({
+        description: msg,
+      }),
+    }).then(() => console.log("Feedback was sent"));
+  };
+
+  const saveArticle = (article) => {
+    fetch("http://localhost:8000/api/v1/user/save-article/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `JWT ${token}`,
+      },
+      body: JSON.stringify({
+        storyId: article,
+      }),
+    });
+  };
 
   const _carousel = useRef();
   const [modalVisible, setModalVisible] = useState(false);
@@ -74,13 +116,6 @@ export default function Body() {
         <View className="flex-row justify-between items-center">
           <Text className="font-bold" style={{ fontSize: hp(3) }}>
             Top Stories
-          </Text>
-          <Text
-            className="font-semibold"
-            style={{ color: "#EE6D33", fontSize: hp(2) }}
-            onPress={show2}
-          >
-            See all
           </Text>
         </View>
         <View className="mt-4 mr-4 justify-center flex-col">
@@ -115,16 +150,20 @@ export default function Body() {
                       >
                         <View className="self-center" style={{ width: wp(50) }}>
                           <View className="border-b-2 pb-2 border-neutral-300">
-                            <View className="flex-row items-center justify-between">
-                              <Text className="text-lg text-neutral-600 font-semibold">
-                                Save article
-                              </Text>
-                              <FontAwesome6
-                                name="bookmark"
-                                size={24}
-                                color="gray"
-                              />
-                            </View>
+                            <TouchableOpacity
+                              onPress={() => saveArticle(item._id)}
+                            >
+                              <View className="flex-row items-center justify-between">
+                                <Text className="text-lg text-neutral-600 font-semibold">
+                                  Save article
+                                </Text>
+                                <FontAwesome6
+                                  name="bookmark"
+                                  size={24}
+                                  color="gray"
+                                />
+                              </View>
+                            </TouchableOpacity>
                             <View
                               className="flex-row items-center justify-between"
                               style={{ marginTop: hp(1.5) }}
@@ -265,7 +304,13 @@ export default function Body() {
                   onPress={hide2}
                 />
                 <Text className="font-semibold text-lg">Send feedback</Text>
-                <FontAwesome6 name="paper-plane" size={24} color="black" />
+                <TouchableOpacity
+                  onPress={() => {
+                    sendFeedback(description);
+                  }}
+                >
+                  <FontAwesome6 name="paper-plane" size={24} color="black" />
+                </TouchableOpacity>
               </View>
             </View>
             <View className="mx-5 mt-5" style={{ margin: "auto" }}>
@@ -275,6 +320,7 @@ export default function Body() {
                 placeholder="Describe the issue"
                 multiline={true}
                 textAlignVertical="top"
+                onChange={(e) => setDescription(e.nativeEvent.text)}
               />
             </View>
             <View className="border-b-2 border-neutral-200 mt-5" />
