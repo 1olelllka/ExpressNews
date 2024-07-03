@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";

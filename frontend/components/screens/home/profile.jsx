@@ -2,7 +2,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   TextInput,
   FlatList,
   Alert,
@@ -95,7 +94,7 @@ export default function Profile() {
   const handleButtonPress = (title) => {
     setButton((prevState) => ({
       ...prevState,
-      [title]: !prevState[title], // Toggle the state for the specific button[item.id]
+      [title]: !prevState[title],
     }));
   };
 

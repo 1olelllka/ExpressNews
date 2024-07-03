@@ -16,7 +16,7 @@ export default function SeeMore() {
   const [button, setButton] = useState(() => {
     const initialStates = {};
     route.params.data.forEach((item) => {
-      initialStates[item._id] = false; // Set all buttons to 'OFF' state
+      initialStates[item._id] = false;
     });
     return initialStates;
   });
@@ -45,7 +45,7 @@ export default function SeeMore() {
         data.forEach((item) => {
           setButton((prevState) => ({
             ...prevState,
-            [item._id]: true, // Set all buttons to 'OFF' state
+            [item._id]: true,
           }));
         });
       });
@@ -54,7 +54,7 @@ export default function SeeMore() {
   const handleButtonPress = (id) => {
     setButton((prevState) => ({
       ...prevState,
-      [id]: !prevState[id], // Toggle the state for the specific button[item.id]
+      [id]: !prevState[id],
     }));
   };
 

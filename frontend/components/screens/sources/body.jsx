@@ -43,7 +43,7 @@ export default function Body() {
     tokenValue();
     const initialStates = {};
     sources.forEach((item) => {
-      initialStates[item._id] = true; // Set all buttons to 'OFF' state
+      initialStates[item._id] = true;
     });
 
     return initialStates;
@@ -51,7 +51,7 @@ export default function Body() {
   const handleButtonPress = (id) => {
     setButton((prevState) => ({
       ...prevState,
-      [id]: !prevState[id], // Toggle the state for the specific button
+      [id]: !prevState[id],
     }));
   };
 
@@ -81,7 +81,7 @@ export default function Body() {
           data.forEach((item) => {
             setButton((prevState) => ({
               ...prevState,
-              [item._id]: true, // Set all buttons to 'OFF' state
+              [item._id]: true,
             }));
           });
         });

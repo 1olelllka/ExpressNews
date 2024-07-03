@@ -51,7 +51,7 @@ export default function Body() {
   const handleButtonPress = (id) => {
     setButtonSave((prevState) => ({
       ...prevState,
-      [id]: !prevState[id], // Toggle the state for the specific button[item.id]
+      [id]: !prevState[id],
     }));
   };
 
@@ -142,6 +142,10 @@ export default function Body() {
       .then((data) => {
         if (data.errors) {
           Alert.alert("Error", data.errors[0].msg);
+        }
+        if (data.msg) {
+          Alert.alert("Success", data.msg);
+          setModalVisible(false);
         }
       });
   };

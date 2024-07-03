@@ -1,8 +1,7 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import Header from './header'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Body from './body'
+import React from "react";
+import Header from "./header";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Body from "./body";
 
 export default function Following() {
   return (
@@ -10,5 +9,5 @@ export default function Following() {
       <Header />
       <Body />
     </SafeAreaView>
-  )
+  );
 }

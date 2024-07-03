@@ -7,6 +7,7 @@ import {
   TextInput,
   Platform,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -119,7 +120,7 @@ export default function ProfileSources({ route }) {
   const handleButtonPress = (id) => {
     setButtonSave((prevState) => ({
       ...prevState,
-      [id]: !prevState[id], // Toggle the state for the specific button[item.id]
+      [id]: !prevState[id],
     }));
   };
 
@@ -152,7 +153,17 @@ export default function ProfileSources({ route }) {
       body: JSON.stringify({
         description: msg,
       }),
-    });
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.errors) {
+          Alert.alert("Error", data.errors[0].msg);
+        }
+        if (data.msg) {
+          Alert.alert("Success", data.msg);
+          setModalVisible(false);
+        }
+      });
   };
 
   const save = (id) => {
@@ -227,8 +238,6 @@ export default function ProfileSources({ route }) {
                     <TouchableOpacity
                       onPress={() => {
                         sendFeedback(description);
-                        alert("Thank you for your feedback");
-                        setModalVisible(false);
                       }}
                     >
                       <FontAwesome6

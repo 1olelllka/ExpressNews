@@ -20,9 +20,9 @@ const register = async (req, res, next) => {
       full_name,
     });
     await user.save();
-    res.status(201).send(`User ${user._id} has been registered`);
+    res.status(201).send({ msg: `User ${user._id} has been registered` });
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send({ msg: err });
     next(err);
   }
 };

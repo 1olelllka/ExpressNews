@@ -7,11 +7,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  AntDesign,
-  FontAwesome6,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import {
   heightPercentageToDP as hp,

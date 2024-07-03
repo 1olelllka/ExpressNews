@@ -78,7 +78,7 @@ export default function Signup() {
             "userData",
             JSON.stringify({
               token: data.token,
-              expiry: Date.now() + 3600000, // 1 hour
+              expiry: Date.now() + 1000 * 60 * 60 * 24,
             })
           );
           navigation.navigate("MyTabs");
