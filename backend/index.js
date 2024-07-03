@@ -1,23 +1,12 @@
 const express = require("express");
-const { createServer } = require("node:http");
 const { Server } = require("socket.io");
-const https = require("node:https");
 const http = require("node:http");
-const fs = require("fs");
 // Config
 require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT;
 const basicUrl = process.env.BASIC_URL;
 
-// Server and Socket.io
-// const server = https.createServer(
-//   {
-//     key: fs.readFileSync(process.env.CERTIFICATE_SECRET_PATH),
-//     cert: fs.readFileSync(process.env.CERTIFICATE_PATH),
-//   },
-//   app
-// );
 const server = http.createServer(app);
 const io = new Server(server);
 module.exports = { io }; // for messages
@@ -31,7 +20,6 @@ const specs = swaggerJsdoc(options);
 // Sessions Middleware
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
-const RedisStore = require("connect-redis").default;
 
 // Databases
 const connectDB = require("./src/databases/database");
@@ -60,28 +48,12 @@ app.use(limiter);
 app.use(helmet());
 
 app.use((req, res, next) => {
-  console.log(`${req.method}: ${req.url}`);
+  console.log(`${req.method}: ${req.url} at ${new Date().toLocaleString()}`);
   next();
 });
 
 app.use(express.json());
-app.use(
-  session({
-    secret: process.env.SESSIONS_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 }, // 60 minutes
-    store: new RedisStore({
-      client: client,
-      secret: process.env.SESSIONS_SECRET,
-      resave: false,
-      saveUninitialized: true,
-    }),
-  })
-);
-app.use(cookieParser());
-require("./src/middlewares/discordAuth");
-require("./src/middlewares/googleAuth");
+// require("./src/middlewares/discordAuth");
 
 // Routes
 app.use(`${basicUrl}/auth`, require("./src/routes/auth/auth"));

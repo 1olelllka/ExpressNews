@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -17,7 +17,8 @@ export default function Header() {
             onPress={() => navigation.navigate("Notifications")}
           >
             <Text style={{ fontSize: hp(3) }} className="font-semibold">
-              For You
+              For You{"  "}
+              <FontAwesome5 name="hand-point-left" size={24} color="#ad2d2d" />
             </Text>
           </TouchableOpacity>
         </View>

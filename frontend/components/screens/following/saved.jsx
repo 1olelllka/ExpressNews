@@ -163,6 +163,14 @@ export default function Saved() {
         </View>
         <View className="border-b-2 border-neutral-200" />
         <View className="mt-4 mx-4">
+          {saved.length === 0 && (
+            <Text
+              className="text-xl text-neutral-500"
+              style={{ marginTop: hp(1) }}
+            >
+              No Saved Articles
+            </Text>
+          )}
           <FlatList
             style={{ height: hp(80) }}
             data={saved}

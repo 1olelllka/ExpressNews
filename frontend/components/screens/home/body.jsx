@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -15,7 +16,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { Entypo, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { format } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -136,7 +137,13 @@ export default function Body() {
       body: JSON.stringify({
         description: msg,
       }),
-    }).then(() => console.log("Feedback was sent"));
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.errors) {
+          Alert.alert("Error", data.errors[0].msg);
+        }
+      });
   };
 
   const saveArticle = (article) => {
@@ -306,7 +313,7 @@ export default function Body() {
       </View>
       <Modal
         isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible2(false)}
+        onBackdropPress={() => setModalVisible(false)}
         backdropOpacity={0.2}
         style={{ margin: 0 }}
       >
@@ -323,12 +330,9 @@ export default function Body() {
           >
             <View className="border-b-2 pb-3 border-neutral-200">
               <View className="mx-5 mt-5 flex-row items-center justify-between">
-                <FontAwesome6
-                  name="xmark"
-                  size={30}
-                  color="black"
-                  onPress={() => setModalVisible(false)}
-                />
+                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                  <FontAwesome6 name="xmark" size={30} color="black" />
+                </TouchableOpacity>
                 <Text className="font-semibold text-lg">Send feedback</Text>
                 <TouchableOpacity
                   onPress={() => {

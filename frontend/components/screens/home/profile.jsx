@@ -121,16 +121,27 @@ export default function Profile() {
   }, [token]);
 
   const logout = () => {
-    fetch("http://localhost:8000/api/v1/auth/logout/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
+    Alert.alert("Are you sure you want to logout?", "", [
+      {
+        text: "Cancel",
+        style: "cancel",
       },
-    }).then(() => {
-      AsyncStorage.removeItem("userData");
-      navigation.navigate("Login");
-    });
+      {
+        text: "OK",
+        onPress: () => {
+          fetch("http://localhost:8000/api/v1/auth/logout/", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `JWT ${token}`,
+            },
+          }).then(() => {
+            AsyncStorage.removeItem("userData");
+            navigation.navigate("Login");
+          });
+        },
+      },
+    ]);
   };
 
   const changeCredentials = (username, email, full_name) => {
@@ -145,7 +156,13 @@ export default function Profile() {
         email: email,
         full_name: full_name,
       }),
-    });
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.errors) {
+          Alert.alert("Error", data.errors.map((e) => e.msg).join(".\n"));
+        }
+      });
   };
 
   const deleteTopic = (topic) => {
@@ -158,14 +175,11 @@ export default function Profile() {
       body: JSON.stringify({
         preferred_topics: preferred.filter((item) => item !== topic),
       }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    });
   };
 
   const addTopic = (topic) => {
     preferred.push(topic);
-    console.log(preferred);
     fetch("http://localhost:8000/api/v1/user/profile", {
       method: "PATCH",
       headers: {
@@ -175,31 +189,26 @@ export default function Profile() {
       body: JSON.stringify({
         preferred_topics: preferred,
       }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+    });
   };
 
   const deleteUser = () => {
     Alert.alert("Are you sure you want to delete your account?", "", [
       {
         text: "Cancel",
-        onPress: () => console.log("Cancel Pressed"),
         style: "cancel",
       },
       {
         text: "OK",
         onPress: () => {
-          fetch("http://localhost:8000/api/v1/user/profile", {
+          fetch("http://localhost:8000/api/v1/user/delete-account", {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
               Authorization: `JWT ${token}`,
             },
           });
-
+          AsyncStorage.removeItem("userData");
           navigation.navigate("Login");
         },
       },

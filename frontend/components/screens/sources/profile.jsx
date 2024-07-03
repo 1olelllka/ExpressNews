@@ -84,11 +84,6 @@ export default function ProfileSources({ route }) {
   }, [token, page]);
 
   const follow = (sourceId) => {
-    console.log(
-      JSON.stringify({
-        sourceId: sourceId,
-      })
-    );
     fetch("http://localhost:8000/api/v1/sources/follow", {
       method: "POST",
       headers: {
@@ -273,7 +268,7 @@ export default function ProfileSources({ route }) {
           <Image
             className="rounded-full"
             style={{ width: hp(12), height: hp(12) }}
-            source={require("../../../assets/images/image.png")}
+            source={require("../../../assets/images/image.jpg")}
           />
           <View className="ml-5">
             <Text className="text-2xl font-bold mt-1">

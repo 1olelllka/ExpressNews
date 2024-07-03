@@ -60,16 +60,20 @@ export default function SearchScreen() {
     <SafeAreaView>
       <View className="mx-4">
         {/* Header */}
-        <View className="flex flex-row">
+        <View className="flex flex-row items-center">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign name="arrowleft" size={hp(3)} color="black" />
           </TouchableOpacity>
           <TextInput
-            className="flex-1 ml-3 border-b-2 border-neutral-600"
+            className="flex-1 ml-3 p-2 border-b-2 border-neutral-600"
             placeholder="Search"
             onSubmitEditing={({ nativeEvent }) => search(nativeEvent.text)}
           />
         </View>
+        <View
+          className="border-b-4 border-neutral-200 pb-4"
+          style={{ width: wp(100), alignSelf: "center" }}
+        />
         <View style={{ paddingBottom: hp(15) }}>
           <FlatList
             data={searches.reverse().slice(0, 15)}

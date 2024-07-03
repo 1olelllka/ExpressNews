@@ -89,11 +89,6 @@ export default function Body() {
   }, [focused, token]);
 
   const follow = (sourceId) => {
-    console.log(
-      JSON.stringify({
-        sourceId: sourceId,
-      })
-    );
     fetch("http://localhost:8000/api/v1/sources/follow", {
       method: "POST",
       headers: {
@@ -147,7 +142,7 @@ export default function Body() {
                     <Image
                       style={{ width: hp(12), height: hp(12) }}
                       className="rounded-full"
-                      source={require("../../../assets/images/image.png")}
+                      source={require("../../../assets/images/image.jpg")}
                     />
                   </TouchableOpacity>
                   <Text className="text-lg">{item.name?.slice(0, 11)}</Text>
@@ -229,7 +224,7 @@ export default function Body() {
                     <Image
                       style={{ width: hp(12), height: hp(12) }}
                       className="rounded-full"
-                      source={require("../../../assets/images/image.png")}
+                      source={require("../../../assets/images/image.jpg")}
                     />
                   </TouchableOpacity>
                   <Text className="text-lg">{item?.name.slice(0, 11)}</Text>
@@ -313,7 +308,7 @@ export default function Body() {
                     <Image
                       style={{ width: hp(12), height: hp(12) }}
                       className="rounded-full"
-                      source={require("../../../assets/images/image.png")}
+                      source={require("../../../assets/images/image.jpg")}
                     />
                   </TouchableOpacity>
                   <Text className="text-lg">{item?.name.slice(0, 11)}</Text>
@@ -395,7 +390,7 @@ export default function Body() {
                     <Image
                       style={{ width: hp(12), height: hp(12) }}
                       className="rounded-full"
-                      source={require("../../../assets/images/image.png")}
+                      source={require("../../../assets/images/image.jpg")}
                     />
                   </TouchableOpacity>
                   <Text className="text-lg">{item?.name.slice(0, 11)}</Text>
@@ -477,7 +472,7 @@ export default function Body() {
                     <Image
                       style={{ width: hp(12), height: hp(12) }}
                       className="rounded-full"
-                      source={require("../../../assets/images/image.png")}
+                      source={require("../../../assets/images/image.jpg")}
                     />
                   </TouchableOpacity>
                   <Text className="text-lg">{item?.name.slice(0, 11)}</Text>
@@ -561,7 +556,7 @@ export default function Body() {
                     <Image
                       style={{ width: hp(12), height: hp(12) }}
                       className="rounded-full"
-                      source={require("../../../assets/images/image.png")}
+                      source={require("../../../assets/images/image.jpg")}
                     />
                   </TouchableOpacity>
                   <Text className="text-lg">{item?.name.slice(0, 11)}</Text>
@@ -643,7 +638,7 @@ export default function Body() {
                     <Image
                       style={{ width: hp(12), height: hp(12) }}
                       className="rounded-full"
-                      source={require("../../../assets/images/image.png")}
+                      source={require("../../../assets/images/image.jpg")}
                     />
                   </TouchableOpacity>
                   <Text className="text-lg">{item?.name.slice(0, 11)}</Text>

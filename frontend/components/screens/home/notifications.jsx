@@ -15,6 +15,7 @@ export default function Notifications() {
   const navigation = useNavigation();
   const [messages, setMessages] = useState([]);
   const [token, setToken] = useState("");
+  const [userId, setUserId] = useState("");
 
   const tokenValue = async () => {
     const value = await AsyncStorage.getItem("userData");
@@ -25,14 +26,32 @@ export default function Notifications() {
       }
     }
   };
-  const socket = io("http://localhost:8000/", {
-    auth: { userId: "66561ace45e6bfc3d65e6f77" }, // Needs to be changed
-  });
+
   useEffect(() => {
+    fetch("http://localhost:8000/api/v1/user/profile/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `JWT ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUserId(data._id);
+      });
+  });
+
+  useEffect(() => {
+    const socket = io("http://localhost:8000/", {
+      auth: { userId: userId },
+    });
     socket.on("breaking_news", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
-    return () => socket.disconnect();
+    return () => {
+      socket.off("breaking_news");
+      socket.disconnect();
+    };
   }, []);
 
   function formattedDate(date) {
@@ -54,8 +73,7 @@ export default function Notifications() {
         }
       });
   }, [token]);
-  // FIELDS:
-  // ! author, content, description, publishedAt, source (id, name), title, url, urlToImage
+
   return (
     <SafeAreaView>
       <View>
@@ -67,6 +85,21 @@ export default function Notifications() {
         </View>
         <View className="border-b-2 border-neutral-200" />
         <View>
+          {messages.length == 0 && (
+            <View>
+              <Text
+                style={{ fontSize: hp(3), marginTop: hp(2), marginLeft: wp(2) }}
+              >
+                No Breaking News For Now.
+              </Text>
+              <Text
+                style={{ fontSize: hp(2), marginTop: hp(2), marginLeft: wp(2) }}
+              >
+                You should also consider adding some new preferences in your
+                profile settings.
+              </Text>
+            </View>
+          )}
           <FlatList
             style={{ height: hp(85) }}
             data={messages}

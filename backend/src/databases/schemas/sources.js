@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
-const Category = require("./Category");
 
 const SourceModel = new Schema({
   id: {

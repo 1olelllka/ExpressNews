@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -18,12 +19,11 @@ import {
 } from "react-native-responsive-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import Config from "react-native-config";
 
 GoogleSignin.configure({
-  webClientId:
-    "497062203768-tpgcf12m5anna4qr7ul74nc82c8kbl7u.apps.googleusercontent.com",
-  iosClientId:
-    "497062203768-rjnoakqjrn9gc13gvj0lma0962p3rh5o.apps.googleusercontent.com",
+  webClientId: Config.GOOGLE_WEBCLIENT_ID,
+  iosClientId: Config.GOOGLE_IOSCLIENT_ID,
   scopes: ["profile", "email"],
 });
 const GoogleLogin = async () => {
@@ -44,7 +44,6 @@ export default function Login() {
     try {
       const response = await GoogleLogin();
       const { idToken, user } = response;
-      console.log(user);
 
       if (idToken) {
         fetch("http://localhost:8000/api/v1/auth/auth-google/", {
@@ -110,9 +109,13 @@ export default function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        if (data.msg) {
+          Alert.alert("Error", "Wrong username or password");
+        }
+        if (data.errors) {
+          Alert.alert("Error", data.errors.map((e) => e.msg).join("\n"));
+        }
         if (data.token) {
-          console.log(data.token);
           AsyncStorage.setItem(
             "userData",
             JSON.stringify({
@@ -213,6 +216,9 @@ export default function Login() {
                     shadowRadius: 15,
                     shadowOffset: { width: 1, height: 13 },
                   }}
+                  onPress={() =>
+                    Alert.alert("Info", "This feature is in development...")
+                  }
                 >
                   <Text className="text-xl font-bold text-white text-center mr-2">
                     Continue with Discord

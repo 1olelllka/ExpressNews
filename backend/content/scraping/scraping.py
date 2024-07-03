@@ -4,12 +4,10 @@ import os
 import pika
 import json
 from newsapi import NewsApiClient
-# import time
-# import schedule
 load_dotenv()
 
 newsapi = NewsApiClient(api_key=os.environ['NEWS_API_KEY'])
-connection_parameters = pika.ConnectionParameters('localhost')  # Replace with your hostname/IP if different
+connection_parameters = pika.ConnectionParameters(os.environ['RABBITMQ_URL'], credentials=pika.PlainCredentials(os.environ['RABBITMQ_USER'], os.environ['RABBITMQ_PASSWORD']))  # Replace with your hostname/IP if different
 class Scraping:
     def __init__(self):
         self.client = MongoClient(os.environ['DATABASE_URL'])
@@ -57,10 +55,3 @@ scraping = Scraping()
 # scraping.source_scraping()
 scraping.breaking_news()
 # scraping.news_scraping()
-
-# -----------------------------------------------------------------------------
-# Will be done later
-# schedule.every(10).seconds.do(scraping.breaking_news())
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)

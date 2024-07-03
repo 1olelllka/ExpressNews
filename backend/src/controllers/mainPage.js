@@ -1,14 +1,13 @@
 const Stories = require("../databases/schemas/Story");
 const client = require("../databases/redis");
 
-// In production change the limit !
 const getStories = async (req, res) => {
   try {
     var page = req.query.page;
     if (!page) {
       page = 1;
     }
-    const startIndex = (page - 1) * 5;
+    const startIndex = (page - 1) * 10;
     const stories = await Stories.find()
       .sort("-publishedAt")
       .limit(10)
@@ -45,7 +44,7 @@ const getStoriesSearch = async (req, res) => {
     if (!page) {
       page = 1;
     }
-    const startIndex = (page - 1) * 5;
+    const startIndex = (page - 1) * 10;
     const stories = await Stories.find({ $text: { $search: search } })
       .sort("-publishedAt")
       .limit(10)

@@ -3,9 +3,7 @@ const Stories = require("../databases/schemas/Story");
 
 const storyDetailValidate = [
   param("id").custom(async (id) => {
-    console.log(id);
     const story = await Stories.findById(id);
-    console.log(story);
     if (!story) {
       throw new Error("Story not found");
     }

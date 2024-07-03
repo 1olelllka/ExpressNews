@@ -89,7 +89,7 @@ const routes = Router();
 
 /**
  * @swagger
- * /user/profile:
+ * /user/delete-account:
  *  delete:
  *    summary: Delete user account
  *    description: This can only be done by authenticated users
@@ -148,9 +148,7 @@ routes.patch("/profile", patchUserValidate, async (req, res) => {
 routes.delete("/delete-account", async (req, res) => {
   await client.del(req.user._id.toString());
   await client.del(req.user._id.toString() + "_breaking_news");
-  await client.del("sess:" + req.sessionID.toString());
   await User.findByIdAndDelete(req.user._id);
-  req.session = null;
   req.user = null;
   res.status(202).send("User has been deleted");
 });

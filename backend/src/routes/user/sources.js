@@ -37,7 +37,7 @@ const routes = Router();
  *        description: Internal server error
  */
 /** @swagger
- * /sources/sources-news/:source
+ * /sources/sources-news/{source}:
  *  get:
  *    summary: Get all news filtered by sources
  *    description: This can only be done by authenticated users

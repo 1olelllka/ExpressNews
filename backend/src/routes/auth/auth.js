@@ -39,13 +39,6 @@ const routes = Router();
  *          type: string
  */
 
-// DEBUG
-routes.get("/csrf", async (req, res) => {
-  const token = generateToken(req, res);
-  req.csrfToken = token;
-  res.status(200).json({ token });
-});
-
 /**
  * @swagger
  * /auth/register:

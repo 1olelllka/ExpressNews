@@ -9,6 +9,17 @@ certificates/
 dist/
 web-build/
 
+ios/build/
+ios/Pods/
+android/app/build/
+android/.gradle/
+android/.idea/
+android/local.properties
+android/.settings/
+android/*.iml
+ios/App/public/
+android/App/public/
+
 # Native
 *.orig.*
 *.jks
@@ -34,3 +45,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+.env

@@ -1,7 +1,6 @@
 const { httpLogger } = require("./winston");
 const { formatHttpLoggerResponse } = require("./format");
 
-// Interseptor for urls, res.send();
 const responseInterceptor = (req, res, next) => {
   const originalSend = res.send;
 

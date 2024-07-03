@@ -2,20 +2,13 @@ const User = require("../databases/schemas/User");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const googleLogin = async (req, res, next) => {
+const googleLogin = async (req, res) => {
   const { googleId, username, email, full_name, image } = req.body;
   const user = await User.findOne({ googleId: googleId });
   if (user) {
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
-    );
-    const refreshToken = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_REFRESH_SECRET,
       {
         expiresIn: "1d",
       }
@@ -34,17 +27,10 @@ const googleLogin = async (req, res, next) => {
       { userId: newUser._id, username: newUser.username },
       process.env.JWT_SECRET,
       {
-        expiresIn: "4h",
-      }
-    );
-    const refreshToken = jwt.sign(
-      { userId: newUser._id },
-      process.env.JWT_REFRESH_SECRET,
-      {
         expiresIn: "1d",
       }
     );
-    return res.status(200).json({ token });
+    return res.status(201).json({ token });
   }
 };
 

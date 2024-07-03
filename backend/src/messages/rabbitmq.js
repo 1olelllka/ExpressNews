@@ -43,7 +43,6 @@ function rabbitMQ(io) {
           const exists = await client.json.type(
             u._id.toString() + "_breaking_news"
           );
-          console.log(u._id.toString());
           if (exists) {
             await client.json.arrAppend(
               u._id.toString() + "_breaking_news",

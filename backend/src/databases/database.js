@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { httpLogger } = require("../logs/winston");
+require("dotenv").config();
 
 const connectDB = async () => {
   try {

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -15,7 +16,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Signup() {
@@ -24,6 +24,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [full_name, setFullName] = useState("");
+  const [hasErrors, setHasErrors] = useState(false);
 
   const register = async (username, email, password, full_name) => {
     fetch("http://localhost:8000/api/v1/auth/register", {
@@ -37,11 +38,26 @@ export default function Signup() {
         password: password,
         full_name: full_name,
       }),
-    }).then(() => {
-      setTimeout(() => {
-        login(username, password);
-      }, 1000);
-    });
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.exist) {
+          Alert.alert("Error", data.exist);
+          setHasErrors(true);
+        }
+        if (data.errors) {
+          Alert.alert("Error", data.errors.map((e) => e.msg).join(".\n"));
+          setHasErrors(true);
+        }
+      })
+      .then(() => {
+        console.log(hasErrors);
+        if (!hasErrors) {
+          setTimeout(() => {
+            login(username, password);
+          }, 1000);
+        }
+      });
   };
 
   const login = async (username, password) => {
@@ -57,7 +73,6 @@ export default function Signup() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data?.token) {
           AsyncStorage.setItem(
             "userData",

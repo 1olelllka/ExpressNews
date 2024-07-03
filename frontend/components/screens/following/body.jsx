@@ -60,6 +60,14 @@ export default function Body() {
         <View>
           <Text className="font-semibold text-lg">Subscribed</Text>
         </View>
+        {subscribed.length === 0 && (
+          <Text
+            className="text-xl text-neutral-500"
+            style={{ marginTop: hp(3) }}
+          >
+            No Sources
+          </Text>
+        )}
         <FlatList
           style={{ height: hp(56) }}
           data={subscribed}
@@ -73,7 +81,7 @@ export default function Body() {
               <View className="flex-row items-center justify-between mt-4">
                 <View className="flex-row items-center space-x-2">
                   <Image
-                    source={require("../../../assets/images/image.png")}
+                    source={require("../../../assets/images/image.jpg")}
                     style={{ height: hp(5), width: hp(5) }}
                   />
                   <Text className="text-lg">{item.name}</Text>

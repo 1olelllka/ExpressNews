@@ -1,4 +1,11 @@
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -10,8 +17,6 @@ import { format } from "date-fns";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ArticleDetails({ navigation, route }) {
-  const [thumbsUpPressed, setThumbsUpPressed] = useState(false);
-  const [thumbsDownPressed, setThumbsDownPressed] = useState(false);
   const [article, setArticle] = useState({});
   const [token, setToken] = useState("");
 
@@ -23,14 +28,6 @@ export default function ArticleDetails({ navigation, route }) {
         setToken(data.token);
       }
     }
-  };
-  const changeThumbsUpPressed = () => {
-    setThumbsUpPressed(!thumbsUpPressed);
-    setThumbsDownPressed(false);
-  };
-  const changeThumbsDownPressed = () => {
-    setThumbsDownPressed(!thumbsDownPressed);
-    setThumbsUpPressed(false);
   };
   useEffect(() => {
     tokenValue();
@@ -45,7 +42,6 @@ export default function ArticleDetails({ navigation, route }) {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setArticle(data);
       })
       .catch((err) => {
@@ -65,7 +61,12 @@ export default function ArticleDetails({ navigation, route }) {
             </TouchableOpacity>
             <Text className="text-neutral-500">{article.source?.name}</Text>
             <TouchableOpacity>
-              <Ionicons name="share-outline" size={24} color="black" />
+              <Ionicons
+                name="share-outline"
+                size={24}
+                color="black"
+                onPress={() => Alert.alert("Share", "Coming Soon")}
+              />
             </TouchableOpacity>
           </View>
           <View
@@ -130,32 +131,7 @@ export default function ArticleDetails({ navigation, route }) {
           style={{ borderBottomWidth: 1 }}
         />
         <View className="m-4 flex-row items-center justify-between">
-          <View className="flex-row items-center space-x-6">
-            <TouchableOpacity onPress={() => changeThumbsUpPressed()}>
-              <MaterialIcons
-                name={thumbsUpPressed ? "thumb-up-alt" : "thumb-up-off-alt"}
-                size={35}
-                color={thumbsUpPressed ? "#EE6D33" : "gray"}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => changeThumbsDownPressed()}>
-              <MaterialIcons
-                name={
-                  thumbsDownPressed ? "thumb-down-alt" : "thumb-down-off-alt"
-                }
-                size={35}
-                color={thumbsDownPressed ? "#EE6D33" : "gray"}
-              />
-            </TouchableOpacity>
-          </View>
-          <View className="flex-row items-center space-x-6">
-            <TouchableOpacity>
-              <MaterialIcons name="arrow-back" size={30} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <MaterialIcons name="arrow-forward" size={30} color="black" />
-            </TouchableOpacity>
-          </View>
+          <Text> </Text>
         </View>
       </ScrollView>
     </SafeAreaView>

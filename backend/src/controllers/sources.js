@@ -36,7 +36,7 @@ const getSourcesNews = async (req, res) => {
   if (!page) {
     page = 1;
   }
-  const startIndex = (page - 1) * 5;
+  const startIndex = (page - 1) * 10;
 
   const sources = await Story.find({ "source.name": req.params.source })
     .limit(10)

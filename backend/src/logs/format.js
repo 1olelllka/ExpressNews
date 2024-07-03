@@ -3,12 +3,12 @@ const { redact } = require("../logs/redact");
 const formatHttpLoggerResponse = (req, res, responseBody) => {
   return {
     request: {
-      headers: req.headers,
-      host: req.headers?.host,
+      headers: req?.headers,
+      host: req?.headers?.host,
       baseUrl: req.baseUrl,
       url: req.url,
-      method: req.method,
-      body: req.body,
+      method: req?.method,
+      body: req?.body,
       params: req?.params,
       query: req?.query,
     },
