@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { io } from "socket.io-client";
 import {
   widthPercentageToDP as wp,
@@ -13,9 +13,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Notifications() {
   const navigation = useNavigation();
+  const route = useRoute();
   const [messages, setMessages] = useState([]);
   const [token, setToken] = useState("");
-  const [userId, setUserId] = useState("");
 
   const tokenValue = async () => {
     const value = await AsyncStorage.getItem("userData");
@@ -26,24 +26,9 @@ export default function Notifications() {
       }
     }
   };
-
-  useEffect(() => {
-    fetch("http://localhost:8000/api/v1/user/profile/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setUserId(data._id);
-      });
-  });
-
   useEffect(() => {
     const socket = io("http://localhost:8000/", {
-      auth: { userId: userId },
+      auth: { userId: route.params.userId },
     });
     socket.on("breaking_news", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
