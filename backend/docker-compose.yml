@@ -1,4 +1,5 @@
 version: "3.8"
+name: express-news-backend
 
 services:
   backend:
@@ -20,6 +21,13 @@ services:
       - mongodb
       - redis
       - rabbitmq
+    
+  sample-content:
+    build: ./content/scraping
+    depends_on:
+      - backend
+    env_file:
+      - .env
 
   mongodb:
     image: mongo:latest
