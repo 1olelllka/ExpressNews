@@ -65,9 +65,10 @@ npx expo run:ios
 
 ### Important Notices
 
+- The project is for iOS users only. The project was tested on MacOS's iOS emulator.
 - Backend uses free tier of NewsAPI, which means it has limited number of calls. I configured my fetching file to have limited calls for the sake of having sample data
 - Prebuild command in frontend is needed to ensure google authorization works as needed.
-- Backend API documentation URI: `/api-docs/`
+- Backend API documentation URI: `/api-docs/`. It is Swagger Docs.
 ---
 
 ## Screenshots
