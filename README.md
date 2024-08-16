@@ -45,7 +45,6 @@ RABBITMQ_PASSWORD=password # -> It's an original credentials for docker-compose.
 2. Install the dependencies:
   ```bash
   cd front-end
-  yarn add expo@51
   yarn install
   ```
 3. Add .env file in frontend folder. It should look like this:
