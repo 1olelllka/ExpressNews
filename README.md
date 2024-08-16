@@ -74,5 +74,7 @@ npx expo run:ios
 <img src="https://github.com/user-attachments/assets/ac0ca71e-466a-4757-b17d-316a79d3eb58" width="300" height="650"/>
 <img src="https://github.com/user-attachments/assets/64125a84-998c-4b71-9b17-d52bb87a109e" width="300" height="650" />
 
+---
+
 **Disclaimer:** A design template was used for visual inspiration only and was applied solely for educational purposes.
 The template url: https://www.visily.ai/templates/news-app/
