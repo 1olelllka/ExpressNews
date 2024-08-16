@@ -45,7 +45,7 @@ class Scraping:
                 if db.stories.count_documents({"title": j['title']}) == 1:
                     continue
                 db.stories.insert_one(j)
-            # break       # ONLY FOR DEVELOPMENT (CALLS ARE LIMITED)
+            break       # ONLY FOR DEVELOPMENT (CALLS ARE LIMITED)
         
 
 
